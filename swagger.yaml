@@ -1,0 +1,225 @@
+openapi: 3.0.3
+info:
+  title: Medical API
+  description: API for managing users, patients, medicines, and diseases
+  version: 1.0.0
+servers:
+  - url: http://api.example.com/v1
+
+paths:
+  /login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: List of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+
+  /update-password:
+    put:
+      summary: Update password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: Password updated successfully
+
+  /forget-password:
+    post:
+      summary: Forget password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+
+      responses:
+        '200':
+          description: Password reset instructions sent
+
+  /patients:
+    post:
+      summary: Add patient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '201':
+          description: Patient added successfully
+    get:
+      summary: Get patients
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filter by patient name
+        - in: query
+          name: mobileNo
+          schema:
+            type: string
+          description: Filter by patient mobile number
+        - in: query
+          name: fatherOrHusbandName
+          schema:
+            type: string
+          description: Filter by patient's father or husband's name
+        - in: query
+          name: dateTime
+          schema:
+            type: string
+            format: date-time
+          description: Filter by date and time
+      responses:
+        '200':
+          description: List of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+
+  /medicines:
+    get:
+      summary: Get medicines
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filter by medicines name
+      responses:
+        '200':
+          description: List of medicines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Medicine'
+    post:
+      summary: Add medicine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Medicine'
+      responses:
+        '201':
+          description: Medicine added successfully
+
+
+  /diseases:
+    get:
+      summary: Get diseases
+      responses:
+        '200':
+          description: List of diseases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Disease'
+
+
+    post:
+      summary: Add medicine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Disease'
+      responses:
+        '201':
+          description: Medicine added successfully
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        token:
+          type: string
+    Patient:
+      type: object
+      properties:
+        name:
+          type: string
+        patientID:
+          type: string
+        dateTime:
+          type: string
+          format: date-time
+        fatherOrHusbandName:
+          type: string
+        age:
+          type: integer
+        weight:
+          type: number
+        gender:
+          type: string
+        mobileNo:
+          type: string
+        address:
+          type: string
+        cnic:
+          type: string
+    Medicine:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    Disease:
+      type: object
+      properties:
+        name:
+          type: string
+        symptoms:
+          type: string
