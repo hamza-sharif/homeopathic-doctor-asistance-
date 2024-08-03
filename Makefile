@@ -1,50 +1,30 @@
+SHELL := /bin/bash
 
-export PROJECT = homeopathic-doctor-asistance-
-DEV_IMAGE := ${PROJECT}_dev
-IMPORT_PATH := github.com/hamza-sharif/${PROJECT}
+include Makefile.variables
 
-# all non-windows environments
-ROOT := $(shell pwd)
-DOCKER_RUN := docker run --rm \
-	-v ${ROOT}:/${PROJECT}/src/${IMPORT_PATH} \
-	${DEV_IMAGE}
-# Default target
-all: build
+prepare: tmp/dev_image_id
+tmp/dev_image_id:
+	@mkdir -p tmp
+	@docker rmi -f ${DEV_IMAGE} > /dev/null 2>&1 || true
+	@docker build -t ${DEV_IMAGE} -f Dockerfile.dev .
+	@docker inspect -f "{{ .ID }}" ${DEV_IMAGE} > tmp/dev_image_id
 
-# Build the project
-build: gen-code
-	@echo "Building $(APP_NAME)..."
-	@go build -o $(BUILD_DIR)/$(APP_NAME) $(SRC_DIR)
-	@echo "Build completed."
+vendor: tmp/vendor-installed
+tmp/vendor-installed: tmp/dev_image_id go.mod
+	@mkdir -p vendor
+	${DOCKERRUN} go mod tidy
+	${DOCKERRUN} go mod vendor
+	@date > tmp/vendor-installed
+	@chmod 644 go.sum || :
 
-# Run tests
-test:
-	@echo "Running tests..."
-	@go test $(PKG)
-	@echo "Tests completed."
-
-# Clean the build directory
 clean:
-	@echo "Cleaning up..."
-	@rm -rf $(BUILD_DIR) $(SWAGGER_GEN_DIR)
-	@echo "Cleanup completed."
+	@rm -rf tmp bin
 
-# Install the application
-install:
-	@echo "Installing $(APP_NAME)..."
-	@go install $(SRC_DIR)
-	@echo "Installation completed."
-
-# Run the application
-run: build
-	@echo "Running $(APP_NAME)..."
-	@./$(BUILD_DIR)/$(APP_NAME)
-
-# Generate Swagger code
-gen-code:
-	@echo "Generating Swagger code..."
+codegen:
 	${DOCKRUN} bash ./scripts/swagger.sh
-	@echo "Swagger code generation completed."
+
+build:
+	@bash ./scripts/build.sh
 
 # Display help
 help:

@@ -1,225 +1,349 @@
-openapi: 3.0.3
+swagger: '2.0'
 info:
   title: Medical API
   description: API for managing users, patients, medicines, and diseases
   version: 1.0.0
-servers:
-  - url: http://api.example.com/v1
+host: api.example.com
 
+securityDefinitions:
+  bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+  internal:
+    type: apiKey
+    in: header
+    name: X-API-Key
+
+#security:  #this is to set for all the apis
+#  - bearer: []
+#  - internal: []
+
+basePath: /v1
+schemes:
+  - http
 paths:
   /login:
     post:
       summary: Login user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
       responses:
-        '200':
+        200:
           description: List of patients
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-
+          schema:
+            type: object
+            $ref: '#/definitions/User'
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
+        404:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/404'
 
   /update-password:
     put:
       summary: Update password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                oldPassword:
-                  type: string
-                newPassword:
-                  type: string
+      security:
+        - bearer: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              oldPassword:
+                type: string
+              newPassword:
+                type: string
       responses:
-        '200':
+        200:
           description: Password updated successfully
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
 
   /forget-password:
     post:
       summary: Forget password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
       responses:
-        '200':
+        200:
           description: Password reset instructions sent
 
   /patients:
     post:
       summary: Add patient
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Patient'
+      security:
+        - bearer: [ ]
+
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Patient'
       responses:
-        '201':
+        201:
           description: Patient added successfully
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
+
     get:
       summary: Get patients
+      security:
+        - bearer: [ ]
+
       parameters:
-        - in: query
-          name: name
-          schema:
-            type: string
+        - name: name
+          in: query
+          type: string
           description: Filter by patient name
-        - in: query
-          name: mobileNo
-          schema:
-            type: string
+        - name: mobileNo
+          in: query
+          type: string
           description: Filter by patient mobile number
-        - in: query
-          name: fatherOrHusbandName
-          schema:
-            type: string
+        - name: fatherOrHusbandName
+          in: query
+          type: string
           description: Filter by patient's father or husband's name
-        - in: query
-          name: dateTime
-          schema:
-            type: string
-            format: date-time
+        - name: dateTime
+          in: query
+          type: string
+          format: date-time
           description: Filter by date and time
       responses:
-        '200':
+        200:
           description: List of patients
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Patient'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Patient'
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
 
   /medicines:
     get:
       summary: Get medicines
+      security:
+        - bearer: [ ]
+
       parameters:
-        - in: query
-          name: name
-          schema:
-            type: string
+        - name: name
+          in: query
+          type: string
           description: Filter by medicines name
       responses:
-        '200':
+        200:
           description: List of medicines
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Medicine'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Medicine'
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
+
     post:
       summary: Add medicine
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Medicine'
-      responses:
-        '201':
-          description: Medicine added successfully
+      security:
+        - bearer: [ ]
 
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Medicine'
+      responses:
+        201:
+          description: Medicine added successfully
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
 
   /diseases:
     get:
       summary: Get diseases
-      responses:
-        '200':
-          description: List of diseases
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Disease'
+      security:
+        - bearer: [ ]
 
+      responses:
+        200:
+          description: List of diseases
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Disease'
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
 
     post:
       summary: Add medicine
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Disease'
+      security:
+        - bearer: [ ]
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Disease'
       responses:
-        '201':
+        201:
           description: Medicine added successfully
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
 
-components:
-  schemas:
-    User:
-      type: object
-      properties:
-        name:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-        token:
-          type: string
-    Patient:
-      type: object
-      properties:
-        name:
-          type: string
-        patientID:
-          type: string
-        dateTime:
-          type: string
-          format: date-time
-        fatherOrHusbandName:
-          type: string
-        age:
-          type: integer
-        weight:
-          type: number
-        gender:
-          type: string
-        mobileNo:
-          type: string
-        address:
-          type: string
-        cnic:
-          type: string
-    Medicine:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-    Disease:
-      type: object
-      properties:
-        name:
-          type: string
-        symptoms:
-          type: string
+definitions:
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+      token:
+        type: string
+  Patient:
+    type: object
+    properties:
+      name:
+        type: string
+      patientID:
+        type: string
+      dateTime:
+        type: string
+        format: date-time
+      fatherOrHusbandName:
+        type: string
+      age:
+        type: integer
+      weight:
+        type: number
+      gender:
+        type: string
+      mobileNo:
+        type: string
+      address:
+        type: string
+      cnic:
+        type: string
+  Medicine:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+  Disease:
+    type: object
+    properties:
+      name:
+        type: string
+      symptoms:
+        type: string
+  error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: string
+        example: error code
+      message:
+        type: string
+        example: error message
+responses:
+  400:
+    description: Bad Request
+    schema:
+      $ref: '#/definitions/error'
+  401:
+    description: Unauthorized
+    schema:
+      $ref: '#/definitions/error'
+  404:
+    description: Not Found
+    schema:
+      $ref: '#/definitions/error'
+  409:
+    description: Conflict
+    schema:
+      $ref: '#/definitions/error'
+  500:
+    description: Internal Server Error
+    schema:
+      $ref: '#/definitions/error'
+  422:
+    description: Invalid json
+    schema:
+      $ref: '#/definitions/error'
+

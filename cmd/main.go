@@ -1,45 +1,41 @@
 package main
 
 import (
-	"flag"
-	"log"
-	"net/http"
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
+	"strconv"
 
-	"example/gen/restapi"
-	"example/gen/restapi/operations"
 	"github.com/go-openapi/loads"
-	"github.com/go-openapi/runtime/middleware"
-	"github.com/go-openapi/strfmt"
+	"github.com/spf13/viper"
+
+	runtime "github.com/hamza-sharif/homeopathic-doctor-assistant"
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/gen/restapi"
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/handlers"
 )
 
 func main() {
-	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
+	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
-	api := operations.NewExampleServerAPI(swaggerSpec)
+	runT, err := runtime.NewRuntime()
+	if err != nil {
+		panic(err)
+	}
+
+	api := handlers.NewHandler(runT, swaggerSpec)
+
 	server := restapi.NewServer(api)
-	defer server.Shutdown()
+	server.Port, err = strconv.Atoi(viper.GetString(config.ServerPort))
+	server.Host = viper.GetString(config.ServerHost)
 
-	// Command line options
-	server.Host = "localhost"
-	server.Port = 8080
+	if err != nil {
+		panic(err)
+	}
 
-	// Handler function for the /hello endpoint
-	api.GetHelloHandler = operations.GetHelloHandlerFunc(func(params operations.GetHelloParams) middleware.Responder {
-		return middleware.ResponderFunc(func(rw http.ResponseWriter, pr strfmt.Producer) {
-			rw.WriteHeader(http.StatusOK)
-			rw.Write([]byte("Hello, world!"))
-		})
-	})
-
-	// Parse flags
-	flag.Parse()
-	server.ConfigureFlags()
 	server.ConfigureAPI()
 
 	if err := server.Serve(); err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 }
