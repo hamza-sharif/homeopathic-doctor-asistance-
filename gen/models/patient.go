@@ -19,6 +19,9 @@ import (
 // swagger:model Patient
 type Patient struct {
 
+	// ID
+	ID string `json:"ID,omitempty"`
+
 	// address
 	Address string `json:"address,omitempty"`
 
@@ -44,11 +47,8 @@ type Patient struct {
 	// name
 	Name string `json:"name,omitempty"`
 
-	// patient ID
-	PatientID string `json:"patientID,omitempty"`
-
 	// weight
-	Weight float64 `json:"weight,omitempty"`
+	Weight int64 `json:"weight,omitempty"`
 }
 
 // Validate validates this patient

@@ -109,6 +109,9 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
+                "password": {
+                  "type": "string"
+                },
                 "username": {
                   "type": "string"
                 }
@@ -119,6 +122,12 @@ func init() {
         "responses": {
           "200": {
             "description": "Password reset instructions sent"
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "$ref": "#/responses/400"
+            }
           }
         }
       }
@@ -363,9 +372,6 @@ func init() {
                 "newPassword": {
                   "type": "string"
                 },
-                "oldPassword": {
-                  "type": "string"
-                },
                 "username": {
                   "type": "string"
                 }
@@ -419,6 +425,9 @@ func init() {
     "Patient": {
       "type": "object",
       "properties": {
+        "ID": {
+          "type": "string"
+        },
         "address": {
           "type": "string"
         },
@@ -444,11 +453,8 @@ func init() {
         "name": {
           "type": "string"
         },
-        "patientID": {
-          "type": "string"
-        },
         "weight": {
-          "type": "number"
+          "type": "integer"
         }
       }
     },
@@ -642,6 +648,9 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
+                "password": {
+                  "type": "string"
+                },
                 "username": {
                   "type": "string"
                 }
@@ -652,6 +661,15 @@ func init() {
         "responses": {
           "200": {
             "description": "Password reset instructions sent"
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "description": "Bad Request",
+              "schema": {
+                "$ref": "#/definitions/error"
+              }
+            }
           }
         }
       }
@@ -929,9 +947,6 @@ func init() {
                 "newPassword": {
                   "type": "string"
                 },
-                "oldPassword": {
-                  "type": "string"
-                },
                 "username": {
                   "type": "string"
                 }
@@ -991,6 +1006,9 @@ func init() {
     "Patient": {
       "type": "object",
       "properties": {
+        "ID": {
+          "type": "string"
+        },
         "address": {
           "type": "string"
         },
@@ -1016,11 +1034,8 @@ func init() {
         "name": {
           "type": "string"
         },
-        "patientID": {
-          "type": "string"
-        },
         "weight": {
-          "type": "number"
+          "type": "integer"
         }
       }
     },

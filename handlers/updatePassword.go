@@ -1,16 +1,11 @@
 package handlers
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/go-openapi/swag"
-	"github.com/spf13/viper"
 
 	runtime "github.com/hamza-sharif/homeopathic-doctor-assistant"
-	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
 	gen "github.com/hamza-sharif/homeopathic-doctor-assistant/gen/restapi/operations"
+	model "github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 )
 
 func NewUpdatePassword(rt *runtime.Runtime) gen.PutUpdatePasswordHandler {
@@ -23,18 +18,17 @@ type updatePass struct {
 	rt *runtime.Runtime
 }
 
-func (c *updatePass) Handle(params gen.PutUpdatePasswordParams) middleware.Responder {
-	log().Debugf("Request: user log in")
-
-	user, err := ValidateHeader(params.HTTPRequest.Header.Get("Authorization"), *c.rt)
-	if err != nil {
-		log().Errorf("failed to verify token [status 401] [error :%+v]", err)
-		return gen.NewputUnauthorized()
-		return genHydra.NewAcceptConsentChallengeUnauthorized().
-			WithPayload(&genModel.Error{
-				Code:    swag.String(strconv.Itoa(http.StatusUnauthorized)),
-				Message: swag.String(viper.GetString(config.ErrorMessageToken401)),
-			})
+func (c *updatePass) Handle(params gen.PutUpdatePasswordParams, principal interface{}) middleware.Responder {
+	log().Debugf("Request: user update password")
+	user, ok := principal.(*model.User)
+	if !ok {
+		log().Debugf("not able to convert %v to User", principal)
+		return gen.NewPostLoginBadRequest().WithPayload("not able to get user  from token")
 	}
-	user, err := c.rt.Svc.UpdatePass(user)
+	_, err := c.rt.Svc.UpdatePass(user, params.Body.NewPassword)
+	if err != nil {
+		log().Debugf("not able to update password")
+		return gen.NewPutUpdatePasswordBadRequest().WithPayload("not able to update user")
+	}
+	return gen.NewPutUpdatePasswordOK()
 }

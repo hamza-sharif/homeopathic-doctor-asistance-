@@ -1,14 +1,59 @@
 package handlers
 
 import (
-	gen "github.com/hamza-sharif/homeopathic-doctor-assistant/gen/models"
+	genModel "github.com/hamza-sharif/homeopathic-doctor-assistant/gen/models"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
+	"strconv"
 )
 
-func convertUser(user models.User) *gen.User {
-	return &gen.User{
+func convertUser(user *models.User) *genModel.User {
+	return &genModel.User{
 		Username: user.Username,
 		Password: user.Password,
 		Token:    user.Token,
 	}
+}
+
+func createPatient(params *genModel.Patient) *models.Patient {
+	return &models.Patient{
+		Name:                params.Name,
+		Address:             params.Address,
+		Age:                 int(params.Age),
+		Cnic:                params.Cnic,
+		FatherOrHusbandName: params.FatherOrHusbandName,
+		Gender:              params.Gender,
+		MobileNo:            params.MobileNo,
+		Weight:              int(params.Weight),
+	}
+}
+
+func convertPatients(patients []*models.Patient) []*genModel.Patient {
+	var ptsList []*genModel.Patient
+	for _, pts := range patients {
+		ptsList = append(ptsList, &genModel.Patient{
+			ID:                  strconv.Itoa(int(pts.ID)),
+			Name:                pts.Name,
+			Address:             pts.Address,
+			Age:                 int64(pts.Age),
+			Cnic:                pts.Cnic,
+			FatherOrHusbandName: pts.FatherOrHusbandName,
+			Gender:              pts.Gender,
+			MobileNo:            pts.MobileNo,
+			Weight:              int64(pts.Weight),
+		})
+	}
+
+	return ptsList
+}
+
+func convertMedicine(patients []*models.Medicine) []*genModel.Medicine {
+	var medList []*genModel.Medicine
+	for _, meds := range patients {
+		medList = append(medList, &genModel.Medicine{
+			Name:        meds.Name,
+			Description: meds.Description,
+		})
+	}
+
+	return medList
 }

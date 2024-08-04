@@ -11,7 +11,7 @@ import (
 
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/db"
-	"github.com/hamza-sharif/homeopathic-doctor-assistant/gen/models"
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 )
 
 // client struct for mysql client.

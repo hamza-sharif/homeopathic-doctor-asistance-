@@ -79,9 +79,6 @@ type PutUpdatePasswordBody struct {
 	// new password
 	NewPassword string `json:"newPassword,omitempty"`
 
-	// old password
-	OldPassword string `json:"oldPassword,omitempty"`
-
 	// username
 	Username string `json:"username,omitempty"`
 }

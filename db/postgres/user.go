@@ -1,20 +1,37 @@
 package postgres
 
 import (
+	"errors"
 	"fmt"
-	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
+
 	wraperrors "github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 )
+
+func (cli *client) GetUser(filter map[string]interface{}) (*models.User, error) {
+	var user *models.User
+	result := cli.conn.Where(filter).Find(user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			fmt.Println("No user found with the specified username!")
+			return nil, wraperrors.Wrap(result.Error, config.ErrorMessage404)
+		} else {
+			return nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
+		}
+	}
+
+	return user, nil
+}
 
 func (cli *client) LoginUser(username, password string) (*models.User, error) {
 	var user *models.User
 	result := cli.conn.Where("username = ?", username).First(&user)
 	if result.Error != nil {
-		if result.Error == gorm.ErrRecordNotFound {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			fmt.Println("No user found with the specified username!")
 			return nil, wraperrors.Wrap(result.Error, config.ErrorMessage404)
 		} else {
@@ -30,8 +47,15 @@ func (cli *client) LoginUser(username, password string) (*models.User, error) {
 
 	return user, nil
 }
-func (cli *client) UpdatePass(user *models.User) error {
-	return cli.conn.Model(user).Where("id = ?", user.ID).Update("password", user.Password).Error
+func (cli *client) UpdateUser(user *models.User) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	user.Password = string(hashedPassword)
+
+	return cli.conn.Model(models.User{}).Where(&models.User{ID: user.ID}).Updates(user.ConvertTOMap()).Error
 }
 
 func (cli *client) UpdateToken(userID uint, newToken string) error {

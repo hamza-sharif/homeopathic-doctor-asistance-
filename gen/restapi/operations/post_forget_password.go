@@ -63,6 +63,9 @@ func (o *PostForgetPassword) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 // swagger:model PostForgetPasswordBody
 type PostForgetPasswordBody struct {
 
+	// password
+	Password string `json:"password,omitempty"`
+
 	// username
 	Username string `json:"username,omitempty"`
 }

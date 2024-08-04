@@ -37,23 +37,36 @@ func configureAPI(api *operations.HomeopathicDoctorAssistantAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
+	// Applies when the "Authorization" header is set
+	if api.BearerAuth == nil {
+		api.BearerAuth = func(token string) (interface{}, error) {
+			return nil, errors.NotImplemented("api key auth (bearer) Authorization from header param [Authorization] has not yet been implemented")
+		}
+	}
+
+	// Set your custom authorizer if needed. Default one is security.Authorized()
+	// Expected interface runtime.Authorizer
+	//
+	// Example:
+	// api.APIAuthorizer = security.Authorized()
+
 	if api.GetDiseasesHandler == nil {
-		api.GetDiseasesHandler = operations.GetDiseasesHandlerFunc(func(params operations.GetDiseasesParams) middleware.Responder {
+		api.GetDiseasesHandler = operations.GetDiseasesHandlerFunc(func(params operations.GetDiseasesParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation operations.GetDiseases has not yet been implemented")
 		})
 	}
 	if api.GetMedicinesHandler == nil {
-		api.GetMedicinesHandler = operations.GetMedicinesHandlerFunc(func(params operations.GetMedicinesParams) middleware.Responder {
+		api.GetMedicinesHandler = operations.GetMedicinesHandlerFunc(func(params operations.GetMedicinesParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation operations.GetMedicines has not yet been implemented")
 		})
 	}
 	if api.GetPatientsHandler == nil {
-		api.GetPatientsHandler = operations.GetPatientsHandlerFunc(func(params operations.GetPatientsParams) middleware.Responder {
+		api.GetPatientsHandler = operations.GetPatientsHandlerFunc(func(params operations.GetPatientsParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation operations.GetPatients has not yet been implemented")
 		})
 	}
 	if api.PostDiseasesHandler == nil {
-		api.PostDiseasesHandler = operations.PostDiseasesHandlerFunc(func(params operations.PostDiseasesParams) middleware.Responder {
+		api.PostDiseasesHandler = operations.PostDiseasesHandlerFunc(func(params operations.PostDiseasesParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation operations.PostDiseases has not yet been implemented")
 		})
 	}
@@ -68,17 +81,17 @@ func configureAPI(api *operations.HomeopathicDoctorAssistantAPI) http.Handler {
 		})
 	}
 	if api.PostMedicinesHandler == nil {
-		api.PostMedicinesHandler = operations.PostMedicinesHandlerFunc(func(params operations.PostMedicinesParams) middleware.Responder {
+		api.PostMedicinesHandler = operations.PostMedicinesHandlerFunc(func(params operations.PostMedicinesParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation operations.PostMedicines has not yet been implemented")
 		})
 	}
 	if api.PostPatientsHandler == nil {
-		api.PostPatientsHandler = operations.PostPatientsHandlerFunc(func(params operations.PostPatientsParams) middleware.Responder {
+		api.PostPatientsHandler = operations.PostPatientsHandlerFunc(func(params operations.PostPatientsParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation operations.PostPatients has not yet been implemented")
 		})
 	}
 	if api.PutUpdatePasswordHandler == nil {
-		api.PutUpdatePasswordHandler = operations.PutUpdatePasswordHandlerFunc(func(params operations.PutUpdatePasswordParams) middleware.Responder {
+		api.PutUpdatePasswordHandler = operations.PutUpdatePasswordHandlerFunc(func(params operations.PutUpdatePasswordParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation operations.PutUpdatePassword has not yet been implemented")
 		})
 	}

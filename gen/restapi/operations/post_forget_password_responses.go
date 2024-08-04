@@ -35,3 +35,46 @@ func (o *PostForgetPasswordOK) WriteResponse(rw http.ResponseWriter, producer ru
 
 	rw.WriteHeader(200)
 }
+
+// PostForgetPasswordBadRequestCode is the HTTP code returned for type PostForgetPasswordBadRequest
+const PostForgetPasswordBadRequestCode int = 400
+
+/*
+PostForgetPasswordBadRequest bad request
+
+swagger:response postForgetPasswordBadRequest
+*/
+type PostForgetPasswordBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload interface{} `json:"body,omitempty"`
+}
+
+// NewPostForgetPasswordBadRequest creates PostForgetPasswordBadRequest with default headers values
+func NewPostForgetPasswordBadRequest() *PostForgetPasswordBadRequest {
+
+	return &PostForgetPasswordBadRequest{}
+}
+
+// WithPayload adds the payload to the post forget password bad request response
+func (o *PostForgetPasswordBadRequest) WithPayload(payload interface{}) *PostForgetPasswordBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post forget password bad request response
+func (o *PostForgetPasswordBadRequest) SetPayload(payload interface{}) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostForgetPasswordBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(400)
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
+}

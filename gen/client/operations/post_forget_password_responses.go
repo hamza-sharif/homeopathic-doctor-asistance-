@@ -7,7 +7,9 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
@@ -28,6 +30,12 @@ func (o *PostForgetPasswordReader) ReadResponse(response runtime.ClientResponse,
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewPostForgetPasswordBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		return nil, runtime.NewAPIError("[POST /forget-password] PostForgetPassword", response, response.Code())
 	}
@@ -89,11 +97,82 @@ func (o *PostForgetPasswordOK) readResponse(response runtime.ClientResponse, con
 	return nil
 }
 
+// NewPostForgetPasswordBadRequest creates a PostForgetPasswordBadRequest with default headers values
+func NewPostForgetPasswordBadRequest() *PostForgetPasswordBadRequest {
+	return &PostForgetPasswordBadRequest{}
+}
+
+/*
+PostForgetPasswordBadRequest describes a response with status code 400, with default header values.
+
+bad request
+*/
+type PostForgetPasswordBadRequest struct {
+	Payload interface{}
+}
+
+// IsSuccess returns true when this post forget password bad request response has a 2xx status code
+func (o *PostForgetPasswordBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this post forget password bad request response has a 3xx status code
+func (o *PostForgetPasswordBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this post forget password bad request response has a 4xx status code
+func (o *PostForgetPasswordBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this post forget password bad request response has a 5xx status code
+func (o *PostForgetPasswordBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this post forget password bad request response a status code equal to that given
+func (o *PostForgetPasswordBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the post forget password bad request response
+func (o *PostForgetPasswordBadRequest) Code() int {
+	return 400
+}
+
+func (o *PostForgetPasswordBadRequest) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /forget-password][%d] postForgetPasswordBadRequest %s", 400, payload)
+}
+
+func (o *PostForgetPasswordBadRequest) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /forget-password][%d] postForgetPasswordBadRequest %s", 400, payload)
+}
+
+func (o *PostForgetPasswordBadRequest) GetPayload() interface{} {
+	return o.Payload
+}
+
+func (o *PostForgetPasswordBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 /*
 PostForgetPasswordBody post forget password body
 swagger:model PostForgetPasswordBody
 */
 type PostForgetPasswordBody struct {
+
+	// password
+	Password string `json:"password,omitempty"`
 
 	// username
 	Username string `json:"username,omitempty"`

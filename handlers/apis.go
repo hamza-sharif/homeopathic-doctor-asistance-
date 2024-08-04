@@ -8,12 +8,20 @@ import (
 
 type Handler *operations.HomeopathicDoctorAssistantAPI
 
-func NewHandler(runtime *runtime.Runtime, spec *loads.Document) Handler {
+func NewHandler(rt *runtime.Runtime, spec *loads.Document) Handler {
 	handler := operations.NewHomeopathicDoctorAssistantAPI(spec)
 
-	//user apis
-	handler.PostLoginHandler = NewLoginUser(runtime)
-	//handler.BearerAuth = BearerAuth   it`s not required in this application
+	//user Authentication.
+	handler.BearerAuth = func(token string) (interface{}, error) {
+		// This function will be called with the object available in the context
+		return BearerAuth(token, rt)
+	}
 
+	// user apis
+	handler.PostLoginHandler = NewLoginUser(rt)
+	handler.PutUpdatePasswordHandler = NewUpdatePassword(rt)
+	handler.PostPatientsHandler = NewPostPatient(rt)
+	handler.GetPatientsHandler = NewGetPatient(rt)
+	handler.GetMedicinesHandler = NewGetMedicine(rt)
 	return handler
 }

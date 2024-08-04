@@ -70,8 +70,6 @@ paths:
             properties:
               username:
                 type: string
-              oldPassword:
-                type: string
               newPassword:
                 type: string
       responses:
@@ -98,10 +96,15 @@ paths:
             properties:
               username:
                 type: string
+              password:
+                type: string
       responses:
         200:
           description: Password reset instructions sent
-
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
   /patients:
     post:
       summary: Add patient
@@ -276,7 +279,7 @@ definitions:
     properties:
       name:
         type: string
-      patientID:
+      ID:
         type: string
       dateTime:
         type: string
@@ -286,7 +289,7 @@ definitions:
       age:
         type: integer
       weight:
-        type: number
+        type: integer
       gender:
         type: string
       mobileNo:
