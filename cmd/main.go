@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
 	"strconv"
 
 	"github.com/go-openapi/loads"
+	"github.com/rs/cors"
 	"github.com/spf13/viper"
 
 	runtime "github.com/hamza-sharif/homeopathic-doctor-assistant"
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/gen/restapi"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/handlers"
 )
@@ -32,6 +33,16 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// Configure CORS middleware
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // Allow all origins
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true, // Set to false if credentials should not be allowed
+	}).Handler
+
+	server.SetHandler(corsHandler(server.GetHandler()))
 
 	server.ConfigureAPI()
 

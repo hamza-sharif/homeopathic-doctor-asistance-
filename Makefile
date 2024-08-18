@@ -12,8 +12,8 @@ tmp/dev_image_id:
 vendor: tmp/vendor-installed
 tmp/vendor-installed: tmp/dev_image_id go.mod
 	@mkdir -p vendor
-	${DOCKERRUN} go mod tidy
-	${DOCKERRUN} go mod vendor
+	${DOCKERRUN} GOSUMDB=off go mod tidy
+	${DOCKERRUN} GOSUMDB=off go mod vendor
 	@date > tmp/vendor-installed
 	@chmod 644 go.sum || :
 
