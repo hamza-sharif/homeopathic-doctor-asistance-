@@ -19,9 +19,9 @@ type loginUser struct {
 
 func (c *loginUser) Handle(params gen.PostLoginParams) middleware.Responder {
 	log().Debugf("Request: user log in")
+
 	user, err := c.rt.Svc.LoginUser(params.Body.Username, params.Body.Password)
 	if err != nil {
-
 		if err.Error() == config.ErrorMessage404 {
 			return gen.NewPostLoginNotFound()
 		}

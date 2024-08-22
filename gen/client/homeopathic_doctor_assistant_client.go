@@ -6,10 +6,16 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"net/http"
+
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/spec"
 	"github.com/go-openapi/strfmt"
-	"github.com/hamza-sharif/homeopathic-doctor-assistant/gen/client/operations"
+	"github.com/go-openapi/swag"
+
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/gen/models"
 )
 
 // Default homeopathic doctor assistant HTTP client.

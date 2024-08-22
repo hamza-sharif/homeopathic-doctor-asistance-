@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/rs/cors"
 	"strconv"
 
 	"github.com/go-openapi/loads"
-	"github.com/rs/cors"
 	"github.com/spf13/viper"
 
 	runtime "github.com/hamza-sharif/homeopathic-doctor-assistant"
@@ -33,18 +33,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	// Configure CORS middleware
-	corsHandler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // Allow all origins
+	// Apply CORS middleware
+	corsMiddleware := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // Allow all origins, or specify your domains
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Content-Type", "Authorization"},
-		AllowCredentials: true, // Set to false if credentials should not be allowed
-	}).Handler
-
-	server.SetHandler(corsHandler(server.GetHandler()))
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	})
 
 	server.ConfigureAPI()
+
+	myHandler := server.GetHandler()
+	server.SetHandler(corsMiddleware.Handler(myHandler))
 
 	if err := server.Serve(); err != nil {
 		panic(err)
