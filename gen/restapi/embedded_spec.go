@@ -30,6 +30,30 @@ func init() {
   "host": "api.example.com",
   "basePath": "/v1",
   "paths": {
+    "/dashboard": {
+      "get": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get dashboard details",
+        "responses": {
+          "200": {
+            "description": "basic records",
+            "schema": {
+              "$ref": "#/definitions/Dashboard"
+            }
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "$ref": "#/responses/401"
+            }
+          }
+        }
+      }
+    },
     "/diseases": {
       "get": {
         "security": [
@@ -400,6 +424,23 @@ func init() {
     }
   },
   "definitions": {
+    "Dashboard": {
+      "type": "object",
+      "properties": {
+        "cost_monthly": {
+          "type": "integer"
+        },
+        "cost_today": {
+          "type": "integer"
+        },
+        "patients_monthly": {
+          "type": "integer"
+        },
+        "patients_per_day": {
+          "type": "integer"
+        }
+      }
+    },
     "Disease": {
       "type": "object",
       "properties": {
@@ -557,6 +598,33 @@ func init() {
   "host": "api.example.com",
   "basePath": "/v1",
   "paths": {
+    "/dashboard": {
+      "get": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get dashboard details",
+        "responses": {
+          "200": {
+            "description": "basic records",
+            "schema": {
+              "$ref": "#/definitions/Dashboard"
+            }
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/error"
+              }
+            }
+          }
+        }
+      }
+    },
     "/diseases": {
       "get": {
         "security": [
@@ -981,6 +1049,23 @@ func init() {
     }
   },
   "definitions": {
+    "Dashboard": {
+      "type": "object",
+      "properties": {
+        "cost_monthly": {
+          "type": "integer"
+        },
+        "cost_today": {
+          "type": "integer"
+        },
+        "patients_monthly": {
+          "type": "integer"
+        },
+        "patients_per_day": {
+          "type": "integer"
+        }
+      }
+    },
     "Disease": {
       "type": "object",
       "properties": {

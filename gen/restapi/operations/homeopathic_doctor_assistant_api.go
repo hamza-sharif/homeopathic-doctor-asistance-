@@ -42,6 +42,9 @@ func NewHomeopathicDoctorAssistantAPI(spec *loads.Document) *HomeopathicDoctorAs
 
 		JSONProducer: runtime.JSONProducer(),
 
+		GetDashboardHandler: GetDashboardHandlerFunc(func(params GetDashboardParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation GetDashboard has not yet been implemented")
+		}),
 		GetDiseasesHandler: GetDiseasesHandlerFunc(func(params GetDiseasesParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation GetDiseases has not yet been implemented")
 		}),
@@ -119,6 +122,8 @@ type HomeopathicDoctorAssistantAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
+	// GetDashboardHandler sets the operation handler for the get dashboard operation
+	GetDashboardHandler GetDashboardHandler
 	// GetDiseasesHandler sets the operation handler for the get diseases operation
 	GetDiseasesHandler GetDiseasesHandler
 	// GetMedicinesHandler sets the operation handler for the get medicines operation
@@ -218,6 +223,9 @@ func (o *HomeopathicDoctorAssistantAPI) Validate() error {
 		unregistered = append(unregistered, "AuthorizationAuth")
 	}
 
+	if o.GetDashboardHandler == nil {
+		unregistered = append(unregistered, "GetDashboardHandler")
+	}
 	if o.GetDiseasesHandler == nil {
 		unregistered = append(unregistered, "GetDiseasesHandler")
 	}
@@ -342,6 +350,10 @@ func (o *HomeopathicDoctorAssistantAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/dashboard"] = NewGetDashboard(o.context, o.GetDashboardHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

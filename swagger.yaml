@@ -1,4 +1,6 @@
 swagger: '2.0'
+
+
 info:
   title: Medical API
   description: API for managing users, patients, medicines, and diseases
@@ -261,8 +263,37 @@ paths:
           description: "internal server error"
           schema:
             $ref: '#/responses/401'
+  /dashboard:
+    get:
+      summary: Get dashboard details
+      security:
+        - bearer: [ ]
+
+      responses:
+        200:
+          description: basic records
+          schema:
+            $ref: '#/definitions/Dashboard'
+
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
+
 
 definitions:
+  Dashboard:
+    type: object
+    properties:
+      patients_per_day:
+        type: integer
+      patients_monthly:
+        type: integer
+      cost_today:
+        type: integer
+      cost_monthly:
+        type: integer
+
   User:
     type: object
     properties:
