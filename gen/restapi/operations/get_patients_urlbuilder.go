@@ -11,14 +11,18 @@ import (
 	golangswaggerpaths "path"
 
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // GetPatientsURL generates an URL for the get patients operation
 type GetPatientsURL struct {
+	Cnic                *string
 	DateTime            *strfmt.DateTime
 	FatherOrHusbandName *string
+	Limit               *int32
 	MobileNo            *string
 	Name                *string
+	Offset              *int32
 
 	_basePath string
 	// avoid unkeyed usage
@@ -54,6 +58,14 @@ func (o *GetPatientsURL) Build() (*url.URL, error) {
 
 	qs := make(url.Values)
 
+	var cnicQ string
+	if o.Cnic != nil {
+		cnicQ = *o.Cnic
+	}
+	if cnicQ != "" {
+		qs.Set("cnic", cnicQ)
+	}
+
 	var dateTimeQ string
 	if o.DateTime != nil {
 		dateTimeQ = o.DateTime.String()
@@ -70,6 +82,14 @@ func (o *GetPatientsURL) Build() (*url.URL, error) {
 		qs.Set("fatherOrHusbandName", fatherOrHusbandNameQ)
 	}
 
+	var limitQ string
+	if o.Limit != nil {
+		limitQ = swag.FormatInt32(*o.Limit)
+	}
+	if limitQ != "" {
+		qs.Set("limit", limitQ)
+	}
+
 	var mobileNoQ string
 	if o.MobileNo != nil {
 		mobileNoQ = *o.MobileNo
@@ -84,6 +104,14 @@ func (o *GetPatientsURL) Build() (*url.URL, error) {
 	}
 	if nameQ != "" {
 		qs.Set("name", nameQ)
+	}
+
+	var offsetQ string
+	if o.Offset != nil {
+		offsetQ = swag.FormatInt32(*o.Offset)
+	}
+	if offsetQ != "" {
+		qs.Set("offset", offsetQ)
 	}
 
 	_result.RawQuery = qs.Encode()

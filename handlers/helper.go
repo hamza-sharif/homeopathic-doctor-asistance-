@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"github.com/go-openapi/strfmt"
+	"github.com/google/uuid"
 	genModel "github.com/hamza-sharif/homeopathic-doctor-assistant/gen/models"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
-	"strconv"
 )
 
 func convertUser(user *models.User) *genModel.User {
@@ -16,6 +17,7 @@ func convertUser(user *models.User) *genModel.User {
 
 func createPatient(params *genModel.Patient) *models.Patient {
 	return &models.Patient{
+		ID:                  uuid.NewString(),
 		Name:                params.Name,
 		Address:             params.Address,
 		Age:                 int(params.Age),
@@ -24,6 +26,7 @@ func createPatient(params *genModel.Patient) *models.Patient {
 		Gender:              params.Gender,
 		MobileNo:            params.MobileNo,
 		Weight:              int(params.Weight),
+		Medicine:            params.Medicine,
 	}
 }
 
@@ -31,7 +34,7 @@ func convertPatients(patients []*models.Patient) []*genModel.Patient {
 	var ptsList []*genModel.Patient
 	for _, pts := range patients {
 		ptsList = append(ptsList, &genModel.Patient{
-			ID:                  strconv.Itoa(int(pts.ID)),
+			ID:                  pts.ID,
 			Name:                pts.Name,
 			Address:             pts.Address,
 			Age:                 int64(pts.Age),
@@ -40,6 +43,7 @@ func convertPatients(patients []*models.Patient) []*genModel.Patient {
 			Gender:              pts.Gender,
 			MobileNo:            pts.MobileNo,
 			Weight:              int64(pts.Weight),
+			DateTime:            strfmt.DateTime(pts.CreatedAt),
 		})
 	}
 

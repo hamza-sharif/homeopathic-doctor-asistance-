@@ -36,12 +36,6 @@ func (o *GetDiseasesReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return nil, result
-	case 401:
-		result := NewGetDiseasesUnauthorized()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
 	default:
 		return nil, runtime.NewAPIError("[GET /diseases] GetDiseases", response, response.Code())
 	}
@@ -174,74 +168,6 @@ func (o *GetDiseasesBadRequest) GetPayload() interface{} {
 }
 
 func (o *GetDiseasesBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
-		return err
-	}
-
-	return nil
-}
-
-// NewGetDiseasesUnauthorized creates a GetDiseasesUnauthorized with default headers values
-func NewGetDiseasesUnauthorized() *GetDiseasesUnauthorized {
-	return &GetDiseasesUnauthorized{}
-}
-
-/*
-GetDiseasesUnauthorized describes a response with status code 401, with default header values.
-
-internal server error
-*/
-type GetDiseasesUnauthorized struct {
-	Payload interface{}
-}
-
-// IsSuccess returns true when this get diseases unauthorized response has a 2xx status code
-func (o *GetDiseasesUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this get diseases unauthorized response has a 3xx status code
-func (o *GetDiseasesUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this get diseases unauthorized response has a 4xx status code
-func (o *GetDiseasesUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this get diseases unauthorized response has a 5xx status code
-func (o *GetDiseasesUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this get diseases unauthorized response a status code equal to that given
-func (o *GetDiseasesUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the get diseases unauthorized response
-func (o *GetDiseasesUnauthorized) Code() int {
-	return 401
-}
-
-func (o *GetDiseasesUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /diseases][%d] getDiseasesUnauthorized %s", 401, payload)
-}
-
-func (o *GetDiseasesUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /diseases][%d] getDiseasesUnauthorized %s", 401, payload)
-}
-
-func (o *GetDiseasesUnauthorized) GetPayload() interface{} {
-	return o.Payload
-}
-
-func (o *GetDiseasesUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {

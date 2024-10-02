@@ -8,8 +8,10 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // Dashboard dashboard
@@ -18,20 +20,81 @@ import (
 type Dashboard struct {
 
 	// cost monthly
-	CostMonthly int64 `json:"cost_monthly,omitempty"`
+	// Required: true
+	CostMonthly *int32 `json:"cost_monthly"`
 
 	// cost today
-	CostToday int64 `json:"cost_today,omitempty"`
+	// Required: true
+	CostToday *int32 `json:"cost_today"`
 
 	// patients monthly
-	PatientsMonthly int64 `json:"patients_monthly,omitempty"`
+	// Required: true
+	PatientsMonthly *int32 `json:"patients_monthly"`
 
 	// patients per day
-	PatientsPerDay int64 `json:"patients_per_day,omitempty"`
+	// Required: true
+	PatientsPerDay *int32 `json:"patients_per_day"`
 }
 
 // Validate validates this dashboard
 func (m *Dashboard) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateCostMonthly(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCostToday(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePatientsMonthly(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePatientsPerDay(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Dashboard) validateCostMonthly(formats strfmt.Registry) error {
+
+	if err := validate.Required("cost_monthly", "body", m.CostMonthly); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Dashboard) validateCostToday(formats strfmt.Registry) error {
+
+	if err := validate.Required("cost_today", "body", m.CostToday); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Dashboard) validatePatientsMonthly(formats strfmt.Registry) error {
+
+	if err := validate.Required("patients_monthly", "body", m.PatientsMonthly); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Dashboard) validatePatientsPerDay(formats strfmt.Registry) error {
+
+	if err := validate.Required("patients_per_day", "body", m.PatientsPerDay); err != nil {
+		return err
+	}
+
 	return nil
 }
 

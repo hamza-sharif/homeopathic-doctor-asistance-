@@ -2,14 +2,31 @@ package services
 
 import (
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
+	"time"
 )
 
 func (s *Service) AddPatients(patient *models.Patient) error {
 	return s.db.AddPatient(patient)
 }
 
-func (s *Service) GetPatients(filter map[string]interface{}) ([]*models.Patient, error) {
-	return s.db.GetPatient(filter)
+func (s *Service) GetPatients(patient models.Patient, limit, offset int) ([]*models.Patient, int, error) {
+	patients, err := s.db.GetPatient(&patient, limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	pCount, err := s.db.GetPatientWithFilterCount(&patient)
+	if err != nil {
+		return nil, 0, err
+	}
+	return patients, pCount, nil
+}
+
+func (s *Service) GetPatientsCount(startDate, endDate time.Time) (int, error) {
+	return s.db.GetPatientCount(startDate, endDate)
+}
+func (s *Service) GetPrice(startDate, endDate time.Time) (int, error) {
+	return s.db.GetPrice(startDate, endDate)
 }
 
 func (s *Service) GetMedicine(name string) ([]*models.Medicine, error) {
@@ -21,4 +38,8 @@ func (s *Service) GetMedicine(name string) ([]*models.Medicine, error) {
 
 func (s *Service) AddMedicine(medicine *models.Medicine) error {
 	return s.db.AddMedicine(medicine)
+}
+
+func (s *Service) UpdatePrice(price int) error {
+	return s.db.SetPrice(price)
 }

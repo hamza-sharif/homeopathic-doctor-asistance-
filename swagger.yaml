@@ -85,6 +85,28 @@ paths:
           description: "internal server error"
           schema:
             $ref: '#/responses/401'
+  /update-price:
+    put:
+      summary: Update price
+      security:
+        - bearer: [ ]
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              price:
+                type: integer
+                format: int32
+      responses:
+        200:
+          description: Password updated successfully
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
 
   /forget-password:
     post:
@@ -149,18 +171,32 @@ paths:
           in: query
           type: string
           description: Filter by patient's father or husband's name
+        - name: cnic
+          in: query
+          type: string
+          description: Filter by patient cnic number
         - name: dateTime
           in: query
           type: string
           format: date-time
           description: Filter by date and time
+        - name: offset
+          in: query
+          type: integer
+          format: int32
+          description: how many records we need to skip
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          description: Record in one query
+
       responses:
         200:
           description: List of patients
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Patient'
+            type: object
+            $ref: '#/definitions/PatientResponse'
         400:
           description: "bad request"
           schema:
@@ -175,7 +211,6 @@ paths:
       summary: Get medicines
       security:
         - bearer: [ ]
-
       parameters:
         - name: name
           in: query
@@ -237,10 +272,6 @@ paths:
           description: "bad request"
           schema:
             $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
 
     post:
       summary: Add medicine
@@ -259,10 +290,7 @@ paths:
           description: "bad request"
           schema:
             $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
+
   /dashboard:
     get:
       summary: Get dashboard details
@@ -274,8 +302,7 @@ paths:
           description: basic records
           schema:
             $ref: '#/definitions/Dashboard'
-
-        401:
+        400:
           description: "internal server error"
           schema:
             $ref: '#/responses/401'
@@ -284,15 +311,24 @@ paths:
 definitions:
   Dashboard:
     type: object
+    required:
+      - patients_monthly
+      - patients_per_day
+      - cost_monthly
+      - cost_today
     properties:
       patients_per_day:
         type: integer
+        format: int32
       patients_monthly:
         type: integer
+        format: int32
       cost_today:
         type: integer
+        format: int32
       cost_monthly:
         type: integer
+        format: int32
 
   User:
     type: object
@@ -305,6 +341,17 @@ definitions:
         type: string
       token:
         type: string
+  PatientResponse:
+    type: object
+    properties:
+      size:
+        type: integer
+        format: int32
+        description: Number of items in the response
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Patient'
   Patient:
     type: object
     properties:
@@ -328,6 +375,8 @@ definitions:
       address:
         type: string
       cnic:
+        type: string
+      medicine:
         type: string
   Medicine:
     type: object

@@ -41,6 +41,9 @@ type Patient struct {
 	// gender
 	Gender string `json:"gender,omitempty"`
 
+	// medicine
+	Medicine string `json:"medicine,omitempty"`
+
 	// mobile no
 	MobileNo string `json:"mobileNo,omitempty"`
 

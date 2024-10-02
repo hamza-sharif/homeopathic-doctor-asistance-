@@ -72,6 +72,9 @@ func NewHomeopathicDoctorAssistantAPI(spec *loads.Document) *HomeopathicDoctorAs
 		PutUpdatePasswordHandler: PutUpdatePasswordHandlerFunc(func(params PutUpdatePasswordParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation PutUpdatePassword has not yet been implemented")
 		}),
+		PutUpdatePriceHandler: PutUpdatePriceHandlerFunc(func(params PutUpdatePriceParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation PutUpdatePrice has not yet been implemented")
+		}),
 
 		// Applies when the "Authorization" header is set
 		BearerAuth: func(token string) (interface{}, error) {
@@ -142,6 +145,8 @@ type HomeopathicDoctorAssistantAPI struct {
 	PostPatientsHandler PostPatientsHandler
 	// PutUpdatePasswordHandler sets the operation handler for the put update password operation
 	PutUpdatePasswordHandler PutUpdatePasswordHandler
+	// PutUpdatePriceHandler sets the operation handler for the put update price operation
+	PutUpdatePriceHandler PutUpdatePriceHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -252,6 +257,9 @@ func (o *HomeopathicDoctorAssistantAPI) Validate() error {
 	}
 	if o.PutUpdatePasswordHandler == nil {
 		unregistered = append(unregistered, "PutUpdatePasswordHandler")
+	}
+	if o.PutUpdatePriceHandler == nil {
+		unregistered = append(unregistered, "PutUpdatePriceHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -390,6 +398,10 @@ func (o *HomeopathicDoctorAssistantAPI) initHandlerCache() {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/update-password"] = NewPutUpdatePassword(o.context, o.PutUpdatePasswordHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/update-price"] = NewPutUpdatePrice(o.context, o.PutUpdatePriceHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

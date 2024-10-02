@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewGetPatientsParams creates a new GetPatientsParams object,
@@ -61,6 +62,12 @@ GetPatientsParams contains all the parameters to send to the API endpoint
 */
 type GetPatientsParams struct {
 
+	/* Cnic.
+
+	   Filter by patient cnic number
+	*/
+	Cnic *string
+
 	/* DateTime.
 
 	   Filter by date and time
@@ -75,6 +82,14 @@ type GetPatientsParams struct {
 	*/
 	FatherOrHusbandName *string
 
+	/* Limit.
+
+	   Record in one query
+
+	   Format: int32
+	*/
+	Limit *int32
+
 	/* MobileNo.
 
 	   Filter by patient mobile number
@@ -86,6 +101,14 @@ type GetPatientsParams struct {
 	   Filter by patient name
 	*/
 	Name *string
+
+	/* Offset.
+
+	   how many records we need to skip
+
+	   Format: int32
+	*/
+	Offset *int32
 
 	timeout    time.Duration
 	Context    context.Context
@@ -140,6 +163,17 @@ func (o *GetPatientsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithCnic adds the cnic to the get patients params
+func (o *GetPatientsParams) WithCnic(cnic *string) *GetPatientsParams {
+	o.SetCnic(cnic)
+	return o
+}
+
+// SetCnic adds the cnic to the get patients params
+func (o *GetPatientsParams) SetCnic(cnic *string) {
+	o.Cnic = cnic
+}
+
 // WithDateTime adds the dateTime to the get patients params
 func (o *GetPatientsParams) WithDateTime(dateTime *strfmt.DateTime) *GetPatientsParams {
 	o.SetDateTime(dateTime)
@@ -160,6 +194,17 @@ func (o *GetPatientsParams) WithFatherOrHusbandName(fatherOrHusbandName *string)
 // SetFatherOrHusbandName adds the fatherOrHusbandName to the get patients params
 func (o *GetPatientsParams) SetFatherOrHusbandName(fatherOrHusbandName *string) {
 	o.FatherOrHusbandName = fatherOrHusbandName
+}
+
+// WithLimit adds the limit to the get patients params
+func (o *GetPatientsParams) WithLimit(limit *int32) *GetPatientsParams {
+	o.SetLimit(limit)
+	return o
+}
+
+// SetLimit adds the limit to the get patients params
+func (o *GetPatientsParams) SetLimit(limit *int32) {
+	o.Limit = limit
 }
 
 // WithMobileNo adds the mobileNo to the get patients params
@@ -184,6 +229,17 @@ func (o *GetPatientsParams) SetName(name *string) {
 	o.Name = name
 }
 
+// WithOffset adds the offset to the get patients params
+func (o *GetPatientsParams) WithOffset(offset *int32) *GetPatientsParams {
+	o.SetOffset(offset)
+	return o
+}
+
+// SetOffset adds the offset to the get patients params
+func (o *GetPatientsParams) SetOffset(offset *int32) {
+	o.Offset = offset
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *GetPatientsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -191,6 +247,23 @@ func (o *GetPatientsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		return err
 	}
 	var res []error
+
+	if o.Cnic != nil {
+
+		// query param cnic
+		var qrCnic string
+
+		if o.Cnic != nil {
+			qrCnic = *o.Cnic
+		}
+		qCnic := qrCnic
+		if qCnic != "" {
+
+			if err := r.SetQueryParam("cnic", qCnic); err != nil {
+				return err
+			}
+		}
+	}
 
 	if o.DateTime != nil {
 
@@ -226,6 +299,23 @@ func (o *GetPatientsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		}
 	}
 
+	if o.Limit != nil {
+
+		// query param limit
+		var qrLimit int32
+
+		if o.Limit != nil {
+			qrLimit = *o.Limit
+		}
+		qLimit := swag.FormatInt32(qrLimit)
+		if qLimit != "" {
+
+			if err := r.SetQueryParam("limit", qLimit); err != nil {
+				return err
+			}
+		}
+	}
+
 	if o.MobileNo != nil {
 
 		// query param mobileNo
@@ -255,6 +345,23 @@ func (o *GetPatientsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		if qName != "" {
 
 			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Offset != nil {
+
+		// query param offset
+		var qrOffset int32
+
+		if o.Offset != nil {
+			qrOffset = *o.Offset
+		}
+		qOffset := swag.FormatInt32(qrOffset)
+		if qOffset != "" {
+
+			if err := r.SetQueryParam("offset", qOffset); err != nil {
 				return err
 			}
 		}

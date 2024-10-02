@@ -45,7 +45,7 @@ func init() {
               "$ref": "#/definitions/Dashboard"
             }
           },
-          "401": {
+          "400": {
             "description": "internal server error",
             "schema": {
               "$ref": "#/responses/401"
@@ -77,12 +77,6 @@ func init() {
             "schema": {
               "$ref": "#/responses/400"
             }
-          },
-          "401": {
-            "description": "internal server error",
-            "schema": {
-              "$ref": "#/responses/401"
-            }
           }
         }
       },
@@ -111,12 +105,6 @@ func init() {
             "description": "bad request",
             "schema": {
               "$ref": "#/responses/400"
-            }
-          },
-          "401": {
-            "description": "internal server error",
-            "schema": {
-              "$ref": "#/responses/401"
             }
           }
         }
@@ -311,9 +299,29 @@ func init() {
           },
           {
             "type": "string",
+            "description": "Filter by patient cnic number",
+            "name": "cnic",
+            "in": "query"
+          },
+          {
+            "type": "string",
             "format": "date-time",
             "description": "Filter by date and time",
             "name": "dateTime",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "how many records we need to skip",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "Record in one query",
+            "name": "limit",
             "in": "query"
           }
         ],
@@ -321,10 +329,8 @@ func init() {
           "200": {
             "description": "List of patients",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Patient"
-              }
+              "type": "object",
+              "$ref": "#/definitions/PatientResponse"
             }
           },
           "400": {
@@ -421,23 +427,70 @@ func init() {
           }
         }
       }
+    },
+    "/update-price": {
+      "put": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update price",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "price": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password updated successfully"
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "$ref": "#/responses/401"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
     "Dashboard": {
       "type": "object",
+      "required": [
+        "patients_monthly",
+        "patients_per_day",
+        "cost_monthly",
+        "cost_today"
+      ],
       "properties": {
         "cost_monthly": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         },
         "cost_today": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         },
         "patients_monthly": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         },
         "patients_per_day": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -488,6 +541,9 @@ func init() {
         "gender": {
           "type": "string"
         },
+        "medicine": {
+          "type": "string"
+        },
         "mobileNo": {
           "type": "string"
         },
@@ -496,6 +552,22 @@ func init() {
         },
         "weight": {
           "type": "integer"
+        }
+      }
+    },
+    "PatientResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Patient"
+          }
+        },
+        "size": {
+          "description": "Number of items in the response",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -613,7 +685,7 @@ func init() {
               "$ref": "#/definitions/Dashboard"
             }
           },
-          "401": {
+          "400": {
             "description": "internal server error",
             "schema": {
               "description": "Unauthorized",
@@ -651,15 +723,6 @@ func init() {
                 "$ref": "#/definitions/error"
               }
             }
-          },
-          "401": {
-            "description": "internal server error",
-            "schema": {
-              "description": "Unauthorized",
-              "schema": {
-                "$ref": "#/definitions/error"
-              }
-            }
           }
         }
       },
@@ -688,15 +751,6 @@ func init() {
             "description": "bad request",
             "schema": {
               "description": "Bad Request",
-              "schema": {
-                "$ref": "#/definitions/error"
-              }
-            }
-          },
-          "401": {
-            "description": "internal server error",
-            "schema": {
-              "description": "Unauthorized",
               "schema": {
                 "$ref": "#/definitions/error"
               }
@@ -918,9 +972,29 @@ func init() {
           },
           {
             "type": "string",
+            "description": "Filter by patient cnic number",
+            "name": "cnic",
+            "in": "query"
+          },
+          {
+            "type": "string",
             "format": "date-time",
             "description": "Filter by date and time",
             "name": "dateTime",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "how many records we need to skip",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "Record in one query",
+            "name": "limit",
             "in": "query"
           }
         ],
@@ -928,10 +1002,8 @@ func init() {
           "200": {
             "description": "List of patients",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Patient"
-              }
+              "type": "object",
+              "$ref": "#/definitions/PatientResponse"
             }
           },
           "400": {
@@ -1046,23 +1118,73 @@ func init() {
           }
         }
       }
+    },
+    "/update-price": {
+      "put": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update price",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "price": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password updated successfully"
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/error"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
     "Dashboard": {
       "type": "object",
+      "required": [
+        "patients_monthly",
+        "patients_per_day",
+        "cost_monthly",
+        "cost_today"
+      ],
       "properties": {
         "cost_monthly": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         },
         "cost_today": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         },
         "patients_monthly": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         },
         "patients_per_day": {
-          "type": "integer"
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1113,6 +1235,9 @@ func init() {
         "gender": {
           "type": "string"
         },
+        "medicine": {
+          "type": "string"
+        },
         "mobileNo": {
           "type": "string"
         },
@@ -1121,6 +1246,22 @@ func init() {
         },
         "weight": {
           "type": "integer"
+        }
+      }
+    },
+    "PatientResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Patient"
+          }
+        },
+        "size": {
+          "description": "Number of items in the response",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

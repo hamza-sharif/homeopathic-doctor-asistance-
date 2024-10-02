@@ -22,7 +22,7 @@ func (c *postPatient) Handle(params gen.PostPatientsParams, principal interface{
 	patient := createPatient(params.Body)
 	err := c.rt.Svc.AddPatients(patient)
 	if err != nil {
-		log().Debugf("not able to update password")
+		log().Debugf("not able to add patient: %v", err)
 		return gen.NewPostPatientsBadRequest().WithPayload("not able to update user")
 	}
 	return gen.NewPostPatientsCreated()

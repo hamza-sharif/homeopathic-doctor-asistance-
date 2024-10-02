@@ -12,6 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
@@ -32,6 +33,10 @@ type GetPatientsParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*Filter by patient cnic number
+	  In: query
+	*/
+	Cnic *string
 	/*Filter by date and time
 	  In: query
 	*/
@@ -40,6 +45,10 @@ type GetPatientsParams struct {
 	  In: query
 	*/
 	FatherOrHusbandName *string
+	/*Record in one query
+	  In: query
+	*/
+	Limit *int32
 	/*Filter by patient mobile number
 	  In: query
 	*/
@@ -48,6 +57,10 @@ type GetPatientsParams struct {
 	  In: query
 	*/
 	Name *string
+	/*how many records we need to skip
+	  In: query
+	*/
+	Offset *int32
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -61,6 +74,11 @@ func (o *GetPatientsParams) BindRequest(r *http.Request, route *middleware.Match
 
 	qs := runtime.Values(r.URL.Query())
 
+	qCnic, qhkCnic, _ := qs.GetOK("cnic")
+	if err := o.bindCnic(qCnic, qhkCnic, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qDateTime, qhkDateTime, _ := qs.GetOK("dateTime")
 	if err := o.bindDateTime(qDateTime, qhkDateTime, route.Formats); err != nil {
 		res = append(res, err)
@@ -68,6 +86,11 @@ func (o *GetPatientsParams) BindRequest(r *http.Request, route *middleware.Match
 
 	qFatherOrHusbandName, qhkFatherOrHusbandName, _ := qs.GetOK("fatherOrHusbandName")
 	if err := o.bindFatherOrHusbandName(qFatherOrHusbandName, qhkFatherOrHusbandName, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qLimit, qhkLimit, _ := qs.GetOK("limit")
+	if err := o.bindLimit(qLimit, qhkLimit, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -80,9 +103,32 @@ func (o *GetPatientsParams) BindRequest(r *http.Request, route *middleware.Match
 	if err := o.bindName(qName, qhkName, route.Formats); err != nil {
 		res = append(res, err)
 	}
+
+	qOffset, qhkOffset, _ := qs.GetOK("offset")
+	if err := o.bindOffset(qOffset, qhkOffset, route.Formats); err != nil {
+		res = append(res, err)
+	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindCnic binds and validates parameter Cnic from query.
+func (o *GetPatientsParams) bindCnic(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+	o.Cnic = &raw
+
 	return nil
 }
 
@@ -141,6 +187,29 @@ func (o *GetPatientsParams) bindFatherOrHusbandName(rawData []string, hasKey boo
 	return nil
 }
 
+// bindLimit binds and validates parameter Limit from query.
+func (o *GetPatientsParams) bindLimit(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt32(raw)
+	if err != nil {
+		return errors.InvalidType("limit", "query", "int32", raw)
+	}
+	o.Limit = &value
+
+	return nil
+}
+
 // bindMobileNo binds and validates parameter MobileNo from query.
 func (o *GetPatientsParams) bindMobileNo(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
@@ -173,6 +242,29 @@ func (o *GetPatientsParams) bindName(rawData []string, hasKey bool, formats strf
 		return nil
 	}
 	o.Name = &raw
+
+	return nil
+}
+
+// bindOffset binds and validates parameter Offset from query.
+func (o *GetPatientsParams) bindOffset(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt32(raw)
+	if err != nil {
+		return errors.InvalidType("offset", "query", "int32", raw)
+	}
+	o.Offset = &value
 
 	return nil
 }

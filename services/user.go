@@ -3,10 +3,11 @@ package services
 import (
 	"github.com/google/uuid"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func (s *Service) GetUser(filter map[string]interface{}) (*models.User, error) {
-	return s.db.GetUser(filter)
+func (s *Service) GetUser(filter models.User) (*models.User, error) {
+	return s.db.GetUser(&filter)
 }
 
 func (s *Service) LoginUser(username, password string) (*models.User, error) {
@@ -25,11 +26,17 @@ func (s *Service) LoginUser(username, password string) (*models.User, error) {
 }
 
 func (s *Service) UpdatePass(user *models.User, pass string) (*models.User, error) {
-	user.Password = pass
-	err := s.db.UpdateUser(user)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Password = string(hashedPassword)
+
+	err = s.db.UpdateUser(user)
 	return user, err
 }
 
 func (s *Service) RegisterUser(user models.User) error {
-	return s.db.Register(user)
+	return s.db.Register(&user)
 }

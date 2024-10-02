@@ -58,15 +58,15 @@ func (o *GetDashboardOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 	}
 }
 
-// GetDashboardUnauthorizedCode is the HTTP code returned for type GetDashboardUnauthorized
-const GetDashboardUnauthorizedCode int = 401
+// GetDashboardBadRequestCode is the HTTP code returned for type GetDashboardBadRequest
+const GetDashboardBadRequestCode int = 400
 
 /*
-GetDashboardUnauthorized internal server error
+GetDashboardBadRequest internal server error
 
-swagger:response getDashboardUnauthorized
+swagger:response getDashboardBadRequest
 */
-type GetDashboardUnauthorized struct {
+type GetDashboardBadRequest struct {
 
 	/*
 	  In: Body
@@ -74,27 +74,27 @@ type GetDashboardUnauthorized struct {
 	Payload interface{} `json:"body,omitempty"`
 }
 
-// NewGetDashboardUnauthorized creates GetDashboardUnauthorized with default headers values
-func NewGetDashboardUnauthorized() *GetDashboardUnauthorized {
+// NewGetDashboardBadRequest creates GetDashboardBadRequest with default headers values
+func NewGetDashboardBadRequest() *GetDashboardBadRequest {
 
-	return &GetDashboardUnauthorized{}
+	return &GetDashboardBadRequest{}
 }
 
-// WithPayload adds the payload to the get dashboard unauthorized response
-func (o *GetDashboardUnauthorized) WithPayload(payload interface{}) *GetDashboardUnauthorized {
+// WithPayload adds the payload to the get dashboard bad request response
+func (o *GetDashboardBadRequest) WithPayload(payload interface{}) *GetDashboardBadRequest {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the get dashboard unauthorized response
-func (o *GetDashboardUnauthorized) SetPayload(payload interface{}) {
+// SetPayload sets the payload to the get dashboard bad request response
+func (o *GetDashboardBadRequest) SetPayload(payload interface{}) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *GetDashboardUnauthorized) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *GetDashboardBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(401)
+	rw.WriteHeader(400)
 	payload := o.Payload
 	if err := producer.Produce(rw, payload); err != nil {
 		panic(err) // let the recovery middleware deal with this

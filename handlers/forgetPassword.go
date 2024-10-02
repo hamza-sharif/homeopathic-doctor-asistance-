@@ -4,6 +4,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	runtime "github.com/hamza-sharif/homeopathic-doctor-assistant"
 	gen "github.com/hamza-sharif/homeopathic-doctor-assistant/gen/restapi/operations"
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 )
 
 func NewForgetPassword(rt *runtime.Runtime) gen.PostForgetPasswordHandler {
@@ -19,10 +20,7 @@ type forgetPass struct {
 func (c *forgetPass) Handle(params gen.PostForgetPasswordParams) middleware.Responder {
 	log().Debugf("Request: user Forget password")
 
-	filter := map[string]interface{}{
-		"username": params.Body.Username,
-	}
-	user, err := c.rt.Svc.GetUser(filter)
+	user, err := c.rt.Svc.GetUser(models.User{Username: params.Body.Username})
 	if err != nil {
 		log().Debugf("not able to update password")
 		return gen.NewPostForgetPasswordBadRequest().WithPayload("not able to update user")
