@@ -23,12 +23,12 @@ func (c *forgetPass) Handle(params gen.PostForgetPasswordParams) middleware.Resp
 	user, err := c.rt.Svc.GetUser(models.User{Username: params.Body.Username})
 	if err != nil {
 		log().Debugf("not able to update password")
-		return gen.NewPostForgetPasswordBadRequest().WithPayload("not able to update user")
+		return gen.NewPostForgetPasswordBadRequest().WithPayload("not able to update user password")
 	}
 	_, err = c.rt.Svc.UpdatePass(user, params.Body.Password)
 	if err != nil {
 		log().Debugf("not able to update password")
-		return gen.NewPostForgetPasswordBadRequest().WithPayload("not able to update user")
+		return gen.NewPostForgetPasswordBadRequest().WithPayload("not able to update user password")
 	}
-	return gen.NewPostForgetPasswordOK()
+	return gen.NewPostForgetPasswordOK().WithPayload("Successfully updated user password")
 }

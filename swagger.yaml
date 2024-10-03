@@ -77,6 +77,8 @@ paths:
       responses:
         200:
           description: Password updated successfully
+          schema:
+            format: string
         400:
           description: "bad request"
           schema:
@@ -103,6 +105,8 @@ paths:
       responses:
         200:
           description: Password updated successfully
+          schema:
+            format: string
         401:
           description: "internal server error"
           schema:
@@ -125,6 +129,8 @@ paths:
       responses:
         200:
           description: Password reset instructions sent
+          schema:
+            format: string
         400:
           description: "bad request"
           schema:
@@ -144,6 +150,8 @@ paths:
       responses:
         201:
           description: Patient added successfully
+          schema:
+            format: string
         400:
           description: "bad request"
           schema:
@@ -246,6 +254,8 @@ paths:
       responses:
         201:
           description: Medicine added successfully
+          schema:
+            format: string
         400:
           description: "bad request"
           schema:
@@ -286,6 +296,8 @@ paths:
       responses:
         201:
           description: Medicine added successfully
+          schema:
+            format: string
         400:
           description: "bad request"
           schema:
@@ -316,6 +328,7 @@ definitions:
       - patients_per_day
       - cost_monthly
       - cost_today
+      - fee
     properties:
       patients_per_day:
         type: integer
@@ -327,6 +340,9 @@ definitions:
         type: integer
         format: int32
       cost_monthly:
+        type: integer
+        format: int32
+      fee:
         type: integer
         format: int32
 
@@ -343,6 +359,9 @@ definitions:
         type: string
   PatientResponse:
     type: object
+    required:
+      - data
+      - size
     properties:
       size:
         type: integer

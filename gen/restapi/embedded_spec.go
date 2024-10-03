@@ -99,7 +99,10 @@ func init() {
         ],
         "responses": {
           "201": {
-            "description": "Medicine added successfully"
+            "description": "Medicine added successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -133,7 +136,10 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Password reset instructions sent"
+            "description": "Password reset instructions sent",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -253,7 +259,10 @@ func init() {
         ],
         "responses": {
           "201": {
-            "description": "Medicine added successfully"
+            "description": "Medicine added successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -366,7 +375,10 @@ func init() {
         ],
         "responses": {
           "201": {
-            "description": "Patient added successfully"
+            "description": "Patient added successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -411,7 +423,10 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Password updated successfully"
+            "description": "Password updated successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -454,7 +469,10 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Password updated successfully"
+            "description": "Password updated successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "401": {
             "description": "internal server error",
@@ -473,7 +491,8 @@ func init() {
         "patients_monthly",
         "patients_per_day",
         "cost_monthly",
-        "cost_today"
+        "cost_today",
+        "fee"
       ],
       "properties": {
         "cost_monthly": {
@@ -481,6 +500,10 @@ func init() {
           "format": "int32"
         },
         "cost_today": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fee": {
           "type": "integer",
           "format": "int32"
         },
@@ -557,6 +580,10 @@ func init() {
     },
     "PatientResponse": {
       "type": "object",
+      "required": [
+        "data",
+        "size"
+      ],
       "properties": {
         "data": {
           "type": "array",
@@ -745,7 +772,10 @@ func init() {
         ],
         "responses": {
           "201": {
-            "description": "Medicine added successfully"
+            "description": "Medicine added successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -782,7 +812,10 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Password reset instructions sent"
+            "description": "Password reset instructions sent",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -920,7 +953,10 @@ func init() {
         ],
         "responses": {
           "201": {
-            "description": "Medicine added successfully"
+            "description": "Medicine added successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -1045,7 +1081,10 @@ func init() {
         ],
         "responses": {
           "201": {
-            "description": "Patient added successfully"
+            "description": "Patient added successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -1096,7 +1135,10 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Password updated successfully"
+            "description": "Password updated successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "400": {
             "description": "bad request",
@@ -1145,7 +1187,10 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Password updated successfully"
+            "description": "Password updated successfully",
+            "schema": {
+              "format": "string"
+            }
           },
           "401": {
             "description": "internal server error",
@@ -1167,7 +1212,8 @@ func init() {
         "patients_monthly",
         "patients_per_day",
         "cost_monthly",
-        "cost_today"
+        "cost_today",
+        "fee"
       ],
       "properties": {
         "cost_monthly": {
@@ -1175,6 +1221,10 @@ func init() {
           "format": "int32"
         },
         "cost_today": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fee": {
           "type": "integer",
           "format": "int32"
         },
@@ -1251,6 +1301,10 @@ func init() {
     },
     "PatientResponse": {
       "type": "object",
+      "required": [
+        "data",
+        "size"
+      ],
       "properties": {
         "data": {
           "type": "array",

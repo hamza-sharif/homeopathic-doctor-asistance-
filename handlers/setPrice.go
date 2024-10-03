@@ -21,8 +21,8 @@ func (c *putPrice) Handle(params gen.PutUpdatePriceParams, principal interface{}
 
 	err := c.rt.Svc.UpdatePrice(int(params.Body.Price))
 	if err != nil {
-		return gen.NewPostLoginBadRequest()
+		return gen.NewPostLoginBadRequest().WithPayload("Error Bad request: " + err.Error())
 	}
 
-	return gen.NewPutUpdatePriceOK()
+	return gen.NewPutUpdatePriceOK().WithPayload("price updated successfully")
 }

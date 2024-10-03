@@ -28,5 +28,5 @@ func (c *addMedicine) Handle(params gen.PostMedicinesParams, principal interface
 		log().Debugf("not able to get list of patients: %v", err)
 		return gen.NewPostMedicinesBadRequest().WithPayload("not able to update user")
 	}
-	return gen.NewPostMedicinesCreated()
+	return gen.NewPostMedicinesCreated().WithPayload("medicine added successfully")
 }

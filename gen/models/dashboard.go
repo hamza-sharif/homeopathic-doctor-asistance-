@@ -27,6 +27,10 @@ type Dashboard struct {
 	// Required: true
 	CostToday *int32 `json:"cost_today"`
 
+	// fee
+	// Required: true
+	Fee *int32 `json:"fee"`
+
 	// patients monthly
 	// Required: true
 	PatientsMonthly *int32 `json:"patients_monthly"`
@@ -45,6 +49,10 @@ func (m *Dashboard) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCostToday(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFee(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -74,6 +82,15 @@ func (m *Dashboard) validateCostMonthly(formats strfmt.Registry) error {
 func (m *Dashboard) validateCostToday(formats strfmt.Registry) error {
 
 	if err := validate.Required("cost_today", "body", m.CostToday); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Dashboard) validateFee(formats strfmt.Registry) error {
+
+	if err := validate.Required("fee", "body", m.Fee); err != nil {
 		return err
 	}
 

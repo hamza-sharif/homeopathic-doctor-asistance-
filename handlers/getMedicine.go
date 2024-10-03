@@ -18,12 +18,12 @@ type getMedicine struct {
 }
 
 func (c *getMedicine) Handle(params gen.GetMedicinesParams, principal interface{}) middleware.Responder {
-	log().Debugf("Request: add new patient")
+	log().Debugf("Request: get Medicines")
 
 	meds, err := c.rt.Svc.GetMedicine(swag.StringValue(params.Name))
 	if err != nil {
-		log().Debugf("not able to get list of patients: %v", err)
-		return gen.NewGetMedicinesBadRequest().WithPayload("not able to update user")
+		log().Debugf("not able to get list of medicines: %v", err)
+		return gen.NewGetMedicinesBadRequest().WithPayload("not able to get medicines")
 	}
 	return gen.NewGetMedicinesOK().WithPayload(convertMedicine(meds))
 }

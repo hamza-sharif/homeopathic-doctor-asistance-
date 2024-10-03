@@ -20,6 +20,11 @@ PostDiseasesCreated Medicine added successfully
 swagger:response postDiseasesCreated
 */
 type PostDiseasesCreated struct {
+
+	/*
+	  In: Body
+	*/
+	Payload string `json:"body,omitempty"`
 }
 
 // NewPostDiseasesCreated creates PostDiseasesCreated with default headers values
@@ -28,12 +33,25 @@ func NewPostDiseasesCreated() *PostDiseasesCreated {
 	return &PostDiseasesCreated{}
 }
 
+// WithPayload adds the payload to the post diseases created response
+func (o *PostDiseasesCreated) WithPayload(payload string) *PostDiseasesCreated {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post diseases created response
+func (o *PostDiseasesCreated) SetPayload(payload string) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *PostDiseasesCreated) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(201)
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
 }
 
 // PostDiseasesBadRequestCode is the HTTP code returned for type PostDiseasesBadRequest

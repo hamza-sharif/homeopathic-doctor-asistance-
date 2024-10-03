@@ -23,15 +23,15 @@ func (c *loginUser) Handle(params gen.PostLoginParams) middleware.Responder {
 	user, err := c.rt.Svc.LoginUser(params.Body.Username, params.Body.Password)
 	if err != nil {
 		if err.Error() == config.ErrorMessage404 {
-			return gen.NewPostLoginNotFound()
+			return gen.NewPostLoginNotFound().WithPayload("User not found")
 		}
 		if err.Error() == config.ErrorMessage500 {
-			return gen.NewPostLoginBadRequest()
+			return gen.NewPostLoginBadRequest().WithPayload("Internal Server Error")
 		}
 		if err.Error() == config.ErrorMessageToken401 {
-			return gen.NewPostLoginUnauthorized()
+			return gen.NewPostLoginUnauthorized().WithPayload("Token Not Authorized")
 		}
-		return gen.NewPostLoginBadRequest()
+		return gen.NewPostLoginBadRequest().WithPayload("Bad request")
 	}
 
 	return gen.NewPostLoginOK().WithPayload(convertUser(user))

@@ -20,6 +20,11 @@ PostForgetPasswordOK Password reset instructions sent
 swagger:response postForgetPasswordOK
 */
 type PostForgetPasswordOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload string `json:"body,omitempty"`
 }
 
 // NewPostForgetPasswordOK creates PostForgetPasswordOK with default headers values
@@ -28,12 +33,25 @@ func NewPostForgetPasswordOK() *PostForgetPasswordOK {
 	return &PostForgetPasswordOK{}
 }
 
+// WithPayload adds the payload to the post forget password o k response
+func (o *PostForgetPasswordOK) WithPayload(payload string) *PostForgetPasswordOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post forget password o k response
+func (o *PostForgetPasswordOK) SetPayload(payload string) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *PostForgetPasswordOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(200)
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
 }
 
 // PostForgetPasswordBadRequestCode is the HTTP code returned for type PostForgetPasswordBadRequest

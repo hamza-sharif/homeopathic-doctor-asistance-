@@ -20,6 +20,11 @@ PutUpdatePriceOK Password updated successfully
 swagger:response putUpdatePriceOK
 */
 type PutUpdatePriceOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload string `json:"body,omitempty"`
 }
 
 // NewPutUpdatePriceOK creates PutUpdatePriceOK with default headers values
@@ -28,12 +33,25 @@ func NewPutUpdatePriceOK() *PutUpdatePriceOK {
 	return &PutUpdatePriceOK{}
 }
 
+// WithPayload adds the payload to the put update price o k response
+func (o *PutUpdatePriceOK) WithPayload(payload string) *PutUpdatePriceOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the put update price o k response
+func (o *PutUpdatePriceOK) SetPayload(payload string) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *PutUpdatePriceOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(200)
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
 }
 
 // PutUpdatePriceUnauthorizedCode is the HTTP code returned for type PutUpdatePriceUnauthorized

@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"fmt"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 	wraperrors "github.com/pkg/errors"
@@ -17,9 +16,19 @@ func (cli *client) AddPatient(patient *models.Patient) error {
 
 func (cli *client) GetPatient(patient *models.Patient, limit, offset int) ([]*models.Patient, error) {
 	var patients []*models.Patient
-	fmt.Println("limit :", limit, "           offset :", offset)
-	result := cli.conn.Model(&models.Patient{}).Where(patient).Order("created_at desc").
-		Limit(limit).Offset(offset).Find(&patients)
+	query := cli.conn.Model(&models.Patient{}).Order("created_at desc")
+
+	if patient != nil {
+		if patient.Name != "" {
+			query = query.Where("name ILIKE ?", "%"+patient.Name+"%")
+			patient.Name = ""
+		}
+		query = query.Where(patient)
+	}
+	//result := cli.conn.Model(&models.Patient{}).Where(patient).Order("created_at desc").
+	//	Limit(limit).Offset(offset).Find(&patients)
+
+	result := query.Limit(limit).Offset(offset).Find(&patients)
 
 	if result.Error != nil {
 		return nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
@@ -49,7 +58,7 @@ func (cli *client) GetPatientCount(startDate, endDate time.Time) (int, error) {
 	return int(count), nil
 }
 
-func (cli *client) GetPrice(startDate, endDate time.Time) (int, error) {
+func (cli *client) GetBill(startDate, endDate time.Time) (int, error) {
 	var count int64
 	err := cli.conn.Model(&models.Patient{}).Select("SUM(price)").Where("created_at BETWEEN ? AND ?", startDate, endDate).Scan(&count).Error
 	if err != nil {
@@ -67,6 +76,11 @@ func (cli *client) SetPrice(price int) error {
 	}
 
 	return nil
+}
+
+func (cli *client) GetPrice() int {
+
+	return cli.Fee
 }
 
 func (cli *client) GetMedicineByName(filter string) ([]*models.Medicine, error) {

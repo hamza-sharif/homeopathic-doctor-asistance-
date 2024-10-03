@@ -17,8 +17,10 @@ type Client interface {
 	GetPatient(patient *models.Patient, limit, offset int) ([]*models.Patient, error)
 	GetPatientWithFilterCount(patient *models.Patient) (int, error)
 	GetPatientCount(startDate, endDate time.Time) (int, error)
-	GetPrice(startDate, endDate time.Time) (int, error)
+	GetBill(startDate, endDate time.Time) (int, error)
+
 	SetPrice(price int) error
+	GetPrice() int
 
 	GetAllMedicine() ([]*models.Medicine, error)
 	GetMedicineByName(filter string) ([]*models.Medicine, error)

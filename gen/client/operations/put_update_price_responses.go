@@ -52,6 +52,7 @@ PutUpdatePriceOK describes a response with status code 200, with default header 
 Password updated successfully
 */
 type PutUpdatePriceOK struct {
+	Payload string
 }
 
 // IsSuccess returns true when this put update price o k response has a 2xx status code
@@ -85,14 +86,25 @@ func (o *PutUpdatePriceOK) Code() int {
 }
 
 func (o *PutUpdatePriceOK) Error() string {
-	return fmt.Sprintf("[PUT /update-price][%d] putUpdatePriceOK", 200)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /update-price][%d] putUpdatePriceOK %s", 200, payload)
 }
 
 func (o *PutUpdatePriceOK) String() string {
-	return fmt.Sprintf("[PUT /update-price][%d] putUpdatePriceOK", 200)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /update-price][%d] putUpdatePriceOK %s", 200, payload)
+}
+
+func (o *PutUpdatePriceOK) GetPayload() string {
+	return o.Payload
 }
 
 func (o *PutUpdatePriceOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

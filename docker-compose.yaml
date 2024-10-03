@@ -1,21 +1,21 @@
 version: '3'
 services:
-#  db:
-#    image: postgres:13
-#    container_name: db
-#    environment:
-#      POSTGRES_USER: test
-#      POSTGRES_PASSWORD: myproject123
-#      POSTGRES_DB: hospital-datastore
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U test -d hospital-datastore" ]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - db-data:/var/lib/postgresql/data
+  db:
+    image: postgres:13
+    container_name: db
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: myproject123
+      POSTGRES_DB: hospital-datastore
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U test -d hospital-datastore" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
 
   server:
     build: .
@@ -29,9 +29,9 @@ services:
       - AUTH_DB_PORT=5432
     ports:
       - "9090:8080"
-#    depends_on:
-#      db:
-#        condition: service_healthy
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - .:/homeopathic-doctor-assistant
     networks:

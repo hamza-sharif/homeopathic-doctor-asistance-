@@ -25,5 +25,5 @@ func (c *postPatient) Handle(params gen.PostPatientsParams, principal interface{
 		log().Debugf("not able to add patient: %v", err)
 		return gen.NewPostPatientsBadRequest().WithPayload("not able to update user")
 	}
-	return gen.NewPostPatientsCreated()
+	return gen.NewPostPatientsCreated().WithPayload("patient added successfully")
 }

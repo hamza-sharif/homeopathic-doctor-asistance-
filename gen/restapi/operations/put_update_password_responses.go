@@ -20,6 +20,11 @@ PutUpdatePasswordOK Password updated successfully
 swagger:response putUpdatePasswordOK
 */
 type PutUpdatePasswordOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload string `json:"body,omitempty"`
 }
 
 // NewPutUpdatePasswordOK creates PutUpdatePasswordOK with default headers values
@@ -28,12 +33,25 @@ func NewPutUpdatePasswordOK() *PutUpdatePasswordOK {
 	return &PutUpdatePasswordOK{}
 }
 
+// WithPayload adds the payload to the put update password o k response
+func (o *PutUpdatePasswordOK) WithPayload(payload string) *PutUpdatePasswordOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the put update password o k response
+func (o *PutUpdatePasswordOK) SetPayload(payload string) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *PutUpdatePasswordOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(200)
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
 }
 
 // PutUpdatePasswordBadRequestCode is the HTTP code returned for type PutUpdatePasswordBadRequest

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 	runtime "github.com/hamza-sharif/homeopathic-doctor-assistant"
@@ -31,28 +30,24 @@ func (c *getDashboard) Handle(params gen.GetDashboardParams, principal interface
 
 	todayPatients, err := c.rt.Svc.GetPatientsCount(startOfDay, now)
 	if err != nil {
-		return gen.NewGetDashboardBadRequest().WithPayload("unable to get patients count %v" + err.Error())
+		return gen.NewGetDashboardBadRequest().WithPayload("unable to get patients count per Day %v" + err.Error())
 	}
 	monthlyPatients, err := c.rt.Svc.GetPatientsCount(startOfMonth, now)
 	if err != nil {
-		return gen.NewGetDashboardBadRequest().WithPayload("unable to get patients count %v" + err.Error())
+		return gen.NewGetDashboardBadRequest().WithPayload("unable to get patients count per Month%v" + err.Error())
 	}
 	var getPrice, getMonthlyPrice int
-	fmt.Println("today ppppppppppppppppppppppppppppp", todayPatients)
 	if todayPatients > 0 {
-		getPrice, err = c.rt.Svc.GetPrice(startOfDay, now)
-		fmt.Println("today cccccccccccccccccccccccccccccc", getPrice)
+		getPrice, err = c.rt.Svc.GetBill(startOfDay, now)
 		if err != nil {
-			return gen.NewGetDashboardBadRequest().WithPayload("unable to get patients count %v" + err.Error())
+			return gen.NewGetDashboardBadRequest().WithPayload("unable to get today revenue %v" + err.Error())
 		}
 	}
 
-	fmt.Println("monthly ppppppppppppppppppppppppppppp", monthlyPatients)
 	if monthlyPatients > 0 {
-		getMonthlyPrice, err = c.rt.Svc.GetPrice(startOfMonth, now)
-		fmt.Println("monthly ccccccccccccccccccccccccccccc", getMonthlyPrice)
+		getMonthlyPrice, err = c.rt.Svc.GetBill(startOfMonth, now)
 		if err != nil {
-			return gen.NewGetDashboardBadRequest().WithPayload("unable to get patients count %v" + err.Error())
+			return gen.NewGetDashboardBadRequest().WithPayload("unable to get total revenue  per Month %v" + err.Error())
 		}
 	}
 
@@ -61,5 +56,6 @@ func (c *getDashboard) Handle(params gen.GetDashboardParams, principal interface
 		CostToday:       swag.Int32(int32(getPrice)),
 		PatientsMonthly: swag.Int32(int32(monthlyPatients)),
 		PatientsPerDay:  swag.Int32(int32(todayPatients)),
+		Fee:             swag.Int32(int32(c.rt.Svc.GetPrice())),
 	})
 }

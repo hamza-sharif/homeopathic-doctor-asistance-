@@ -56,6 +56,7 @@ PostPatientsCreated describes a response with status code 201, with default head
 Patient added successfully
 */
 type PostPatientsCreated struct {
+	Payload string
 }
 
 // IsSuccess returns true when this post patients created response has a 2xx status code
@@ -89,14 +90,25 @@ func (o *PostPatientsCreated) Code() int {
 }
 
 func (o *PostPatientsCreated) Error() string {
-	return fmt.Sprintf("[POST /patients][%d] postPatientsCreated", 201)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /patients][%d] postPatientsCreated %s", 201, payload)
 }
 
 func (o *PostPatientsCreated) String() string {
-	return fmt.Sprintf("[POST /patients][%d] postPatientsCreated", 201)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /patients][%d] postPatientsCreated %s", 201, payload)
+}
+
+func (o *PostPatientsCreated) GetPayload() string {
+	return o.Payload
 }
 
 func (o *PostPatientsCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

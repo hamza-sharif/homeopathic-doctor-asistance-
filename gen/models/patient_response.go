@@ -12,6 +12,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // PatientResponse patient response
@@ -20,10 +21,12 @@ import (
 type PatientResponse struct {
 
 	// data
+	// Required: true
 	Data []*Patient `json:"data"`
 
 	// Number of items in the response
-	Size int32 `json:"size,omitempty"`
+	// Required: true
+	Size *int32 `json:"size"`
 }
 
 // Validate validates this patient response
@@ -34,6 +37,10 @@ func (m *PatientResponse) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSize(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -41,8 +48,9 @@ func (m *PatientResponse) Validate(formats strfmt.Registry) error {
 }
 
 func (m *PatientResponse) validateData(formats strfmt.Registry) error {
-	if swag.IsZero(m.Data) { // not required
-		return nil
+
+	if err := validate.Required("data", "body", m.Data); err != nil {
+		return err
 	}
 
 	for i := 0; i < len(m.Data); i++ {
@@ -61,6 +69,15 @@ func (m *PatientResponse) validateData(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *PatientResponse) validateSize(formats strfmt.Registry) error {
+
+	if err := validate.Required("size", "body", m.Size); err != nil {
+		return err
 	}
 
 	return nil

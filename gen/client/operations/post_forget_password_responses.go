@@ -52,6 +52,7 @@ PostForgetPasswordOK describes a response with status code 200, with default hea
 Password reset instructions sent
 */
 type PostForgetPasswordOK struct {
+	Payload string
 }
 
 // IsSuccess returns true when this post forget password o k response has a 2xx status code
@@ -85,14 +86,25 @@ func (o *PostForgetPasswordOK) Code() int {
 }
 
 func (o *PostForgetPasswordOK) Error() string {
-	return fmt.Sprintf("[POST /forget-password][%d] postForgetPasswordOK", 200)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /forget-password][%d] postForgetPasswordOK %s", 200, payload)
 }
 
 func (o *PostForgetPasswordOK) String() string {
-	return fmt.Sprintf("[POST /forget-password][%d] postForgetPasswordOK", 200)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /forget-password][%d] postForgetPasswordOK %s", 200, payload)
+}
+
+func (o *PostForgetPasswordOK) GetPayload() string {
+	return o.Payload
 }
 
 func (o *PostForgetPasswordOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response payload
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

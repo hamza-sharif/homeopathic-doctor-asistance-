@@ -30,5 +30,5 @@ func (c *updatePass) Handle(params gen.PutUpdatePasswordParams, principal interf
 		log().Debugf("not able to update password")
 		return gen.NewPutUpdatePasswordBadRequest().WithPayload("not able to update user")
 	}
-	return gen.NewPutUpdatePasswordOK()
+	return gen.NewPutUpdatePasswordOK().WithPayload("password updated successfully")
 }

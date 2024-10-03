@@ -23,17 +23,15 @@ type getPatient struct {
 
 func (c *getPatient) Handle(params gen.GetPatientsParams, principal interface{}) middleware.Responder {
 	log().Debugf("Request: get patients patient")
-	log().Debugf("Request: 111")
 
 	filter, limit, offset := getPatientFilter(params)
-	log().Debugf("Request: get patients patient")
 	pts, size, err := c.rt.Svc.GetPatients(filter, limit, offset)
 	if err != nil {
 		log().Debugf("not able to get list of patients: %v", err)
-		return gen.NewGetPatientsBadRequest().WithPayload("not able to update user")
+		return gen.NewGetPatientsBadRequest().WithPayload("not able to get patients")
 	}
 	return gen.NewGetPatientsOK().WithPayload(&genmode.PatientResponse{
-		Size: int32(size),
+		Size: swag.Int32(int32(size)),
 		Data: convertPatients(pts),
 	})
 }
@@ -67,6 +65,10 @@ func getPatientFilter(p gen.GetPatientsParams) (models.Patient, int, int) {
 	}
 	if p.Offset != nil {
 		offset = int(*p.Offset)
+	}
+
+	if limit == 0 {
+		limit = 20
 	}
 
 	return patient, limit, offset

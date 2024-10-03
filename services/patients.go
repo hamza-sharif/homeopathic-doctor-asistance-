@@ -25,8 +25,8 @@ func (s *Service) GetPatients(patient models.Patient, limit, offset int) ([]*mod
 func (s *Service) GetPatientsCount(startDate, endDate time.Time) (int, error) {
 	return s.db.GetPatientCount(startDate, endDate)
 }
-func (s *Service) GetPrice(startDate, endDate time.Time) (int, error) {
-	return s.db.GetPrice(startDate, endDate)
+func (s *Service) GetBill(startDate, endDate time.Time) (int, error) {
+	return s.db.GetBill(startDate, endDate)
 }
 
 func (s *Service) GetMedicine(name string) ([]*models.Medicine, error) {
@@ -42,4 +42,8 @@ func (s *Service) AddMedicine(medicine *models.Medicine) error {
 
 func (s *Service) UpdatePrice(price int) error {
 	return s.db.SetPrice(price)
+}
+
+func (s *Service) GetPrice() int {
+	return s.db.GetPrice()
 }
