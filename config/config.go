@@ -19,6 +19,7 @@ const (
 	ServerEmail    = "server.email"
 	ServerPassword = "server.password"
 
+	PatientsFee          = "fee"
 	ErrorMessageToken401 = "error.token.401"
 	ErrorMessageJSON422  = "error.token.422"
 	ErrorMessage500      = "error.500"
@@ -42,6 +43,8 @@ func init() {
 	_ = viper.BindEnv(ServerHost, "SERVER_HOST")
 	_ = viper.BindEnv(ServerPort, "SERVER_PORT")
 
+	_ = viper.BindEnv(PatientsFee, "FEE")
+
 	_ = viper.BindEnv(LogLevel, "LOG_LEVEL")
 
 	// defaults.
@@ -57,7 +60,7 @@ func defaultVariableValues() {
 	viper.SetDefault(DBPort, "5432")
 	viper.SetDefault(DBUser, "test")
 	viper.SetDefault(DBPassword, "myproject123")
-
+	viper.SetDefault(PatientsFee, 100)
 	viper.SetDefault(ServerHost, "0.0.0.0")
 	viper.SetDefault(ServerPort, "8080")
 	viper.SetDefault(ServerEmail, "noreply@wanclouds.net")

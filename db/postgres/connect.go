@@ -53,8 +53,11 @@ func addMedicine(ctx context.Context, db *gorm.DB) (int, error) {
 	fee := models.Price{}
 	err := db.Model(&models.Price{}).First(&fee).Error
 	if err != nil {
-		log.Fatalf("database not have data on price table %s", err)
-		return 0, err
+		fmt.Println("database not have data on price table %s", err)
+		fee.Fee = viper.GetInt(config.PatientsFee)
+		if errfee := db.Create(&fee).Error; errfee != nil {
+			return 0, err
+		}
 	}
 
 	var med int64

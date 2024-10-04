@@ -23,7 +23,7 @@ func (c *postPatient) Handle(params gen.PostPatientsParams, principal interface{
 	err := c.rt.Svc.AddPatients(patient)
 	if err != nil {
 		log().Debugf("not able to add patient: %v", err)
-		return gen.NewPostPatientsBadRequest().WithPayload("not able to update user")
+		return gen.NewPostPatientsBadRequest().WithPayload("not able to add patient")
 	}
 	return gen.NewPostPatientsCreated().WithPayload("patient added successfully")
 }

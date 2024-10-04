@@ -19,11 +19,13 @@ func (cli *client) GetPatient(patient *models.Patient, limit, offset int) ([]*mo
 	query := cli.conn.Model(&models.Patient{}).Order("created_at desc")
 
 	if patient != nil {
+		name := patient.Name
 		if patient.Name != "" {
 			query = query.Where("name ILIKE ?", "%"+patient.Name+"%")
 			patient.Name = ""
 		}
 		query = query.Where(patient)
+		patient.Name = name
 	}
 	//result := cli.conn.Model(&models.Patient{}).Where(patient).Order("created_at desc").
 	//	Limit(limit).Offset(offset).Find(&patients)
@@ -38,7 +40,16 @@ func (cli *client) GetPatient(patient *models.Patient, limit, offset int) ([]*mo
 
 func (cli *client) GetPatientWithFilterCount(patient *models.Patient) (int, error) {
 	var count int64
-	result := cli.conn.Model(&models.Patient{}).Where(patient).Count(&count)
+	query := cli.conn.Model(&models.Patient{})
+
+	if patient != nil {
+		if patient.Name != "" {
+			query = query.Where("name ILIKE ?", "%"+patient.Name+"%")
+			patient.Name = ""
+		}
+		query = query.Where(patient)
+	}
+	result := query.Count(&count)
 
 	if result.Error != nil {
 		return 0, wraperrors.Wrap(result.Error, config.ErrorMessage500)

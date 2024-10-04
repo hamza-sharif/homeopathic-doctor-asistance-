@@ -12,7 +12,7 @@ type Patient struct {
 	Age                 int    `gorm:"default:0" json:"age"`
 	Cnic                string `gorm:"size:50" json:"cnic"`
 	FatherOrHusbandName string `gorm:"size:50" json:"fatherOrHusbandName"`
-	Gender              string `gorm:"size:4" json:"gender"`
+	Gender              string `gorm:"size:10" json:"gender"`
 	MobileNo            string `gorm:"size:20" json:"mobileNo"`
 	Weight              int    `gorm:"default:0" json:"weight"`
 	Price               int    `gorm:"default:0" json:"price"`
