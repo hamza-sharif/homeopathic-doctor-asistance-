@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/csv"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"os"
 
@@ -50,12 +51,29 @@ func NewClient() (db.Client, error) {
 
 func addMedicine(ctx context.Context, db *gorm.DB) (int, error) {
 
+	// Setting the default fee for the patients
 	fee := models.Price{}
 	err := db.Model(&models.Price{}).First(&fee).Error
 	if err != nil {
 		fmt.Println("database not have data on price table %s", err)
 		fee.Fee = viper.GetInt(config.PatientsFee)
 		if errfee := db.Create(&fee).Error; errfee != nil {
+			return 0, err
+		}
+	}
+
+	// insert a default user if no user exists
+	usr := models.User{}
+	errUser := db.Model(&models.User{}).First(&usr).Error
+	if errUser != nil {
+		fmt.Println("database not have data on user table %s", err)
+		usr.Username = "doctor"
+		hash, err := bcrypt.GenerateFromPassword([]byte("myproject"), bcrypt.DefaultCost)
+		if err != nil {
+			return 0, err
+		}
+		usr.Password = string(hash)
+		if errfee := db.Create(&usr).Error; errfee != nil {
 			return 0, err
 		}
 	}
