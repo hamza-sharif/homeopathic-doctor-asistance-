@@ -39,7 +39,6 @@ func (cli *client) LoginUser(username, password string) (*models.User, error) {
 		}
 	}
 	// Compare the hashed password
-	println(user.Password, password)
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		fmt.Println("Incorrect password!", err)
