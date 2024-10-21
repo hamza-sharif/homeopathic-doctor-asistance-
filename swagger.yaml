@@ -393,6 +393,8 @@ definitions:
         type: string
       address:
         type: string
+      disease:
+        type: string
       cnic:
         type: string
       medicine:

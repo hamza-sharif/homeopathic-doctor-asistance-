@@ -27,6 +27,7 @@ func createPatient(params *genModel.Patient) *models.Patient {
 		MobileNo:            params.MobileNo,
 		Weight:              int(params.Weight),
 		Medicine:            params.Medicine,
+		Disease:             params.Disease,
 	}
 }
 

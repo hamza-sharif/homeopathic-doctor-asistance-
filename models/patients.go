@@ -17,6 +17,7 @@ type Patient struct {
 	Weight              int    `gorm:"default:0" json:"weight"`
 	Price               int    `gorm:"default:0" json:"price"`
 	Medicine            string `gorm:"size:100" json:"medicine"`
+	Disease             string `gorm:"size:100" json:"disease"`
 }
 
 type Price struct {

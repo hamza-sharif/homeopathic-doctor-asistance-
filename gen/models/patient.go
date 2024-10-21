@@ -35,6 +35,9 @@ type Patient struct {
 	// Format: date-time
 	DateTime strfmt.DateTime `json:"dateTime,omitempty"`
 
+	// disease
+	Disease string `json:"disease,omitempty"`
+
 	// father or husband name
 	FatherOrHusbandName string `json:"fatherOrHusbandName,omitempty"`
 

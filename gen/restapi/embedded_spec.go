@@ -558,6 +558,9 @@ func init() {
           "type": "string",
           "format": "date-time"
         },
+        "disease": {
+          "type": "string"
+        },
         "fatherOrHusbandName": {
           "type": "string"
         },
@@ -1278,6 +1281,9 @@ func init() {
         "dateTime": {
           "type": "string",
           "format": "date-time"
+        },
+        "disease": {
+          "type": "string"
         },
         "fatherOrHusbandName": {
           "type": "string"
