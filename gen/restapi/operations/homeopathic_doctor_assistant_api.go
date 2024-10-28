@@ -42,6 +42,9 @@ func NewHomeopathicDoctorAssistantAPI(spec *loads.Document) *HomeopathicDoctorAs
 
 		JSONProducer: runtime.JSONProducer(),
 
+		DeletePatientsPatientIDHandler: DeletePatientsPatientIDHandlerFunc(func(params DeletePatientsPatientIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation DeletePatientsPatientID has not yet been implemented")
+		}),
 		GetDashboardHandler: GetDashboardHandlerFunc(func(params GetDashboardParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation GetDashboard has not yet been implemented")
 		}),
@@ -125,6 +128,8 @@ type HomeopathicDoctorAssistantAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
+	// DeletePatientsPatientIDHandler sets the operation handler for the delete patients patient ID operation
+	DeletePatientsPatientIDHandler DeletePatientsPatientIDHandler
 	// GetDashboardHandler sets the operation handler for the get dashboard operation
 	GetDashboardHandler GetDashboardHandler
 	// GetDiseasesHandler sets the operation handler for the get diseases operation
@@ -228,6 +233,9 @@ func (o *HomeopathicDoctorAssistantAPI) Validate() error {
 		unregistered = append(unregistered, "AuthorizationAuth")
 	}
 
+	if o.DeletePatientsPatientIDHandler == nil {
+		unregistered = append(unregistered, "DeletePatientsPatientIDHandler")
+	}
 	if o.GetDashboardHandler == nil {
 		unregistered = append(unregistered, "GetDashboardHandler")
 	}
@@ -358,6 +366,10 @@ func (o *HomeopathicDoctorAssistantAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/patients/{patient_id}"] = NewDeletePatientsPatientID(o.context, o.DeletePatientsPatientIDHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

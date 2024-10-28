@@ -22,6 +22,7 @@ func NewHandler(rt *runtime.Runtime, spec *loads.Document) Handler {
 	handler.PutUpdatePasswordHandler = NewUpdatePassword(rt)
 	handler.PostPatientsHandler = NewPostPatient(rt)
 	handler.GetPatientsHandler = NewGetPatient(rt)
+	handler.DeletePatientsPatientIDHandler = NewDeletePatient(rt)
 	handler.GetMedicinesHandler = NewGetMedicine(rt)
 	handler.GetDashboardHandler = NewGetDashboard(rt)
 

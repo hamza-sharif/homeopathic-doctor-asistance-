@@ -395,6 +395,44 @@ func init() {
         }
       }
     },
+    "/patients/{patient_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete patient",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "patient_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Patient deleted successfully",
+            "schema": {
+              "format": "string"
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "$ref": "#/responses/400"
+            }
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "$ref": "#/responses/401"
+            }
+          }
+        }
+      }
+    },
     "/update-password": {
       "put": {
         "security": [
@@ -1085,6 +1123,50 @@ func init() {
         "responses": {
           "201": {
             "description": "Patient added successfully",
+            "schema": {
+              "format": "string"
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "description": "Bad Request",
+              "schema": {
+                "$ref": "#/definitions/error"
+              }
+            }
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/patients/{patient_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete patient",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "patient_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Patient deleted successfully",
             "schema": {
               "format": "string"
             }

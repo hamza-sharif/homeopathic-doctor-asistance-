@@ -214,6 +214,33 @@ paths:
           schema:
             $ref: '#/responses/401'
 
+  /patients/{patient_id}:
+    delete:
+      summary: Delete patient
+      security:
+        - bearer: [ ]
+      parameters:
+        - in: path
+          name: patient_id
+          required: true
+          type: string
+
+      responses:
+        201:
+          description: Patient deleted successfully
+          schema:
+            format: string
+        400:
+          description: "bad request"
+          schema:
+            $ref: '#/responses/400'
+        401:
+          description: "internal server error"
+          schema:
+            $ref: '#/responses/401'
+
+
+
   /medicines:
     get:
       summary: Get medicines

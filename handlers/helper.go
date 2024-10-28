@@ -46,6 +46,7 @@ func convertPatients(patients []*models.Patient) []*genModel.Patient {
 			Weight:              int64(pts.Weight),
 			DateTime:            strfmt.DateTime(pts.CreatedAt),
 			Medicine:            pts.Medicine,
+			Disease:             pts.Disease,
 		})
 	}
 

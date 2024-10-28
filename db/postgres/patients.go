@@ -57,6 +57,10 @@ func (cli *client) GetPatientWithFilterCount(patient *models.Patient) (int, erro
 
 	return int(count), nil
 }
+func (cli *client) DeletePatient(patientID string) error {
+	result := cli.conn.Delete(&models.Patient{ID: patientID})
+	return result.Error
+}
 
 func (cli *client) GetPatientCount(startDate, endDate time.Time) (int, error) {
 	var count int64

@@ -15,6 +15,7 @@ type Client interface {
 
 	AddPatient(patient *models.Patient) error
 	GetPatient(patient *models.Patient, limit, offset int) ([]*models.Patient, error)
+	DeletePatient(patientID string) error
 	GetPatientWithFilterCount(patient *models.Patient) (int, error)
 	GetPatientCount(startDate, endDate time.Time) (int, error)
 	GetBill(startDate, endDate time.Time) (int, error)

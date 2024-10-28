@@ -21,6 +21,9 @@ func (s *Service) GetPatients(patient models.Patient, limit, offset int) ([]*mod
 	}
 	return patients, pCount, nil
 }
+func (s *Service) DeletePatient(patientID string) error {
+	return s.db.DeletePatient(patientID)
+}
 
 func (s *Service) GetPatientsCount(startDate, endDate time.Time) (int, error) {
 	return s.db.GetPatientCount(startDate, endDate)
