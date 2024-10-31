@@ -1,10 +1,11 @@
 package postgres
 
 import (
+	"time"
+
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/config"
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 	wraperrors "github.com/pkg/errors"
-	"time"
 )
 
 func (cli *client) AddPatient(patient *models.Patient) error {
@@ -85,9 +86,9 @@ func (cli *client) GetBill(startDate, endDate time.Time) (int, error) {
 
 func (cli *client) SetPrice(price int) error {
 	cli.Fee = price
-	err := cli.conn.Model(&models.Price{}).Updates(&models.Price{Fee: price}).Error
+	err := cli.conn.Model(&models.Price{}).Where("id", 1).Updates(&models.Price{Fee: price}).Error
 	if err != nil {
-		return wraperrors.Wrap(err, config.ErrorMessage500)
+		wraperrors.Wrap(err, config.ErrorMessage500)
 	}
 
 	return nil

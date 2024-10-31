@@ -25,6 +25,7 @@ func NewHandler(rt *runtime.Runtime, spec *loads.Document) Handler {
 	handler.DeletePatientsPatientIDHandler = NewDeletePatient(rt)
 	handler.GetMedicinesHandler = NewGetMedicine(rt)
 	handler.GetDashboardHandler = NewGetDashboard(rt)
+	handler.PutUpdatePriceHandler = NewSetPrice(rt)
 
 	return handler
 }

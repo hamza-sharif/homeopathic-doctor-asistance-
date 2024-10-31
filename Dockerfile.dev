@@ -1,4 +1,4 @@
-FROM golang:1.21
+FROM golang:1.23
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         gettext-base \
@@ -15,8 +15,11 @@ RUN download_url=$(curl -s https://api.github.com/repos/go-swagger/go-swagger/re
       && curl -o /usr/local/bin/swagger -L'#' "$download_url" \
       && chmod +x /usr/local/bin/swagger
 
-RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.55.2 \
-    && go install golang.org/x/tools/cmd/goimports@latest
+RUN go version
+
+RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.55.2 
+
+RUN go install golang.org/x/tools/cmd/goimports@latest
 
 RUN CGO_ENABLED=0
 
