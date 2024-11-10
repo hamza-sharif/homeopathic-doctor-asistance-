@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 	"time"
+
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 )
 
 type Client interface {
@@ -23,7 +24,8 @@ type Client interface {
 	SetPrice(price int) error
 	GetPrice() int
 
-	GetAllMedicine() ([]*models.Medicine, error)
-	GetMedicineByName(filter string) ([]*models.Medicine, error)
+	GetAllMedicine(limit, offset int) ([]*models.Medicine, error)
+	GetMedicineByName(filter string, limit, offset int) ([]*models.Medicine, error)
 	AddMedicine(*models.Medicine) error
+	DeleteMedicine(medicineID int32) error
 }

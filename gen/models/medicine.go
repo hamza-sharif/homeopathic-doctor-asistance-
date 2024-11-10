@@ -20,6 +20,9 @@ type Medicine struct {
 	// description
 	Description string `json:"description,omitempty"`
 
+	// id
+	ID int32 `json:"id,omitempty"`
+
 	// name
 	Name string `json:"name,omitempty"`
 }

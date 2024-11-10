@@ -20,10 +20,15 @@ func NewHandler(rt *runtime.Runtime, spec *loads.Document) Handler {
 	// user apis
 	handler.PostLoginHandler = NewLoginUser(rt)
 	handler.PutUpdatePasswordHandler = NewUpdatePassword(rt)
+
 	handler.PostPatientsHandler = NewPostPatient(rt)
 	handler.GetPatientsHandler = NewGetPatient(rt)
 	handler.DeletePatientsPatientIDHandler = NewDeletePatient(rt)
+
 	handler.GetMedicinesHandler = NewGetMedicine(rt)
+	handler.PostMedicinesHandler = NewPostMedicine(rt)
+	handler.DeleteMedicinesMedicineIDHandler = NewDeleteMedicine(rt)
+
 	handler.GetDashboardHandler = NewGetDashboard(rt)
 	handler.PutUpdatePriceHandler = NewSetPrice(rt)
 

@@ -5,7 +5,7 @@
 //	API for managing users, patients, medicines, and diseases
 //	Schemes:
 //	  http
-//	Host: api.example.com
+//	Host: localhost:8080
 //	BasePath: /v1
 //	Version: 1.0.0
 //

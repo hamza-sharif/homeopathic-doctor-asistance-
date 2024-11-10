@@ -1,480 +1,517 @@
-swagger: '2.0'
+  swagger: '2.0'
 
 
-info:
-  title: Medical API
-  description: API for managing users, patients, medicines, and diseases
-  version: 1.0.0
-host: api.example.com
+  info:
+    title: Medical API
+    description: API for managing users, patients, medicines, and diseases
+    version: 1.0.0
+  host: localhost:8080
 
-securityDefinitions:
-  bearer:
-    type: apiKey
-    in: header
-    name: Authorization
-  internal:
-    type: apiKey
-    in: header
-    name: X-API-Key
+  securityDefinitions:
+    bearer:
+      type: apiKey
+      in: header
+      name: Authorization
+    internal:
+      type: apiKey
+      in: header
+      name: X-API-Key
 
-#security:  #this is to set for all the apis
-#  - bearer: []
-#  - internal: []
+  #security:  #this is to set for all the apis
+  #  - bearer: []
+  #  - internal: []
 
-basePath: /v1
-schemes:
-  - http
-paths:
-  /login:
-    post:
-      summary: Login user
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-              password:
-                type: string
-      responses:
-        200:
-          description: List of patients
-          schema:
-            type: object
-            $ref: '#/definitions/User'
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-        404:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/404'
+  basePath: /v1
+  schemes:
+    - http
+  paths:
+    /login:
+      post:
+        summary: Login user
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        responses:
+          200:
+            description: List of patients
+            schema:
+              $ref: '#/definitions/User'
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+          404:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/404'
 
-  /update-password:
-    put:
-      summary: Update password
-      security:
-        - bearer: []
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-              newPassword:
-                type: string
-      responses:
-        200:
-          description: Password updated successfully
-          schema:
-            format: string
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-  /update-price:
-    put:
-      summary: Update price
-      security:
-        - bearer: [ ]
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              price:
-                type: integer
-                format: int32
-      responses:
-        200:
-          description: Password updated successfully
-          schema:
-            format: string
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
+    /update-password:
+      put:
+        summary: Update password
+        security:
+          - bearer: []
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                newPassword:
+                  type: string
+        responses:
+          200:
+            description: Password updated successfully
+            schema:
+              format: string
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+    /update-price:
+      put:
+        summary: Update price
+        security:
+          - bearer: [ ]
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              properties:
+                price:
+                  type: integer
+                  format: int32
+        responses:
+          200:
+            description: Password updated successfully
+            schema:
+              format: string
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
 
-  /forget-password:
-    post:
-      summary: Forget password
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-              password:
-                type: string
-      responses:
-        200:
-          description: Password reset instructions sent
-          schema:
-            format: string
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-  /patients:
-    post:
-      summary: Add patient
-      security:
-        - bearer: [ ]
+    /forget-password:
+      post:
+        summary: Forget password
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        responses:
+          200:
+            description: Password reset instructions sent
+            schema:
+              format: string
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+    /patients:
+      post:
+        summary: Add patient
+        security:
+          - bearer: [ ]
 
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              $ref: '#/definitions/Patient'
+        responses:
+          201:
+            description: Patient added successfully
+            schema:
+              format: string
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+
+      get:
+        summary: Get patients
+        security:
+          - bearer: [ ]
+
+        parameters:
+          - name: name
+            in: query
+            type: string
+            description: Filter by patient name
+          - name: mobileNo
+            in: query
+            type: string
+            description: Filter by patient mobile number
+          - name: fatherOrHusbandName
+            in: query
+            type: string
+            description: Filter by patient's father or husband's name
+          - name: cnic
+            in: query
+            type: string
+            description: Filter by patient cnic number
+          - name: dateTime
+            in: query
+            type: string
+            format: date-time
+            description: Filter by date and time
+          - name: offset
+            in: query
+            type: integer
+            format: int32
+            description: how many records we need to skip
+          - name: limit
+            in: query
+            type: integer
+            format: int32
+            description: Record in one query
+
+        responses:
+          200:
+            description: List of patients
+            schema:
+              $ref: '#/definitions/PatientResponse'
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+
+    /patients/{patient_id}:
+      delete:
+        summary: Delete patient
+        security:
+          - bearer: [ ]
+        parameters:
+          - in: path
+            name: patient_id
+            required: true
+            type: string
+
+        responses:
+          201:
+            description: Patient deleted successfully
+            schema:
+              format: string
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+
+
+
+    /medicines:
+      get:
+        summary: Get medicines
+        security:
+          - bearer: [ ]
+        parameters:
+          - name: name
+            in: query
+            type: string
+            description: Filter by medicines name
+          - name: offset
+            in: query
+            type: integer
+            format: int32
+            description: how many records we need to skip
+          - name: limit
+            in: query
+            type: integer
+            format: int32
+            description: Record in one query
+        responses:
+          200:
+            description: List of medicines
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Medicine'
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+
+      post:
+        summary: Add medicine
+        security:
+          - bearer: [ ]
+
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              $ref: '#/definitions/Medicine'
+        responses:
+          201:
+            description: Medicine added successfully
+            schema:
+              format: string
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+    /medicines/{medicine_id}:
+      delete:
+        summary: Delete medicine
+        security:
+          - bearer: [ ]
+        parameters:
+          - in: path
+            name: medicine_id
+            required: true
+            type: integer
+            format: int32
+
+        responses:
+          200:
+            description: Medicine deleted successfully
+            schema:
+              format: string
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+          401:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+
+
+    /diseases:
+      get:
+        summary: Get diseases
+        security:
+          - bearer: [ ]
+
+        responses:
+          200:
+            description: List of diseases
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/Disease'
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+
+      post:
+        summary: Add medicine
+        security:
+          - bearer: [ ]
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              $ref: '#/definitions/Disease'
+        responses:
+          201:
+            description: Medicine added successfully
+            schema:
+              format: string
+          400:
+            description: "bad request"
+            schema:
+              $ref: '#/responses/400'
+
+    /dashboard:
+      get:
+        summary: Get dashboard details
+        security:
+          - bearer: [ ]
+
+        responses:
+          200:
+            description: basic records
+            schema:
+              $ref: '#/definitions/Dashboard'
+          400:
+            description: "internal server error"
+            schema:
+              $ref: '#/responses/401'
+
+
+  definitions:
+    Dashboard:
+      type: object
+      required:
+        - patients_monthly
+        - patients_per_day
+        - cost_monthly
+        - cost_today
+        - fee
+      properties:
+        patients_per_day:
+          type: integer
+          format: int32
+        patients_monthly:
+          type: integer
+          format: int32
+        cost_today:
+          type: integer
+          format: int32
+        cost_monthly:
+          type: integer
+          format: int32
+        fee:
+          type: integer
+          format: int32
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        token:
+          type: string
+    PatientResponse:
+      type: object
+      required:
+        - data
+        - size
+      properties:
+        size:
+          type: integer
+          format: int32
+          description: Number of items in the response
+        data:
+          type: array
+          items:
             $ref: '#/definitions/Patient'
-      responses:
-        201:
-          description: Patient added successfully
-          schema:
-            format: string
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-
-    get:
-      summary: Get patients
-      security:
-        - bearer: [ ]
-
-      parameters:
-        - name: name
-          in: query
+    Patient:
+      type: object
+      properties:
+        name:
           type: string
-          description: Filter by patient name
-        - name: mobileNo
-          in: query
+        ID:
           type: string
-          description: Filter by patient mobile number
-        - name: fatherOrHusbandName
-          in: query
-          type: string
-          description: Filter by patient's father or husband's name
-        - name: cnic
-          in: query
-          type: string
-          description: Filter by patient cnic number
-        - name: dateTime
-          in: query
+        dateTime:
           type: string
           format: date-time
-          description: Filter by date and time
-        - name: offset
-          in: query
+        fatherOrHusbandName:
+          type: string
+        age:
+          type: integer
+        weight:
+          type: integer
+        gender:
+          type: string
+        mobileNo:
+          type: string
+        address:
+          type: string
+        disease:
+          type: string
+        cnic:
+          type: string
+        medicine:
+          type: string
+    Medicine:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        id:
           type: integer
           format: int32
-          description: how many records we need to skip
-        - name: limit
-          in: query
-          type: integer
-          format: int32
-          description: Record in one query
-
-      responses:
-        200:
-          description: List of patients
-          schema:
-            type: object
-            $ref: '#/definitions/PatientResponse'
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-
-  /patients/{patient_id}:
-    delete:
-      summary: Delete patient
-      security:
-        - bearer: [ ]
-      parameters:
-        - in: path
-          name: patient_id
-          required: true
+    Disease:
+      type: object
+      properties:
+        name:
           type: string
-
-      responses:
-        201:
-          description: Patient deleted successfully
-          schema:
-            format: string
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-
-
-
-  /medicines:
-    get:
-      summary: Get medicines
-      security:
-        - bearer: [ ]
-      parameters:
-        - name: name
-          in: query
+        symptoms:
           type: string
-          description: Filter by medicines name
-      responses:
-        200:
-          description: List of medicines
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Medicine'
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-
-    post:
-      summary: Add medicine
-      security:
-        - bearer: [ ]
-
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/Medicine'
-      responses:
-        201:
-          description: Medicine added successfully
-          schema:
-            format: string
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-        401:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-
-  /diseases:
-    get:
-      summary: Get diseases
-      security:
-        - bearer: [ ]
-
-      responses:
-        200:
-          description: List of diseases
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Disease'
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-
-    post:
-      summary: Add medicine
-      security:
-        - bearer: [ ]
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/Disease'
-      responses:
-        201:
-          description: Medicine added successfully
-          schema:
-            format: string
-        400:
-          description: "bad request"
-          schema:
-            $ref: '#/responses/400'
-
-  /dashboard:
-    get:
-      summary: Get dashboard details
-      security:
-        - bearer: [ ]
-
-      responses:
-        200:
-          description: basic records
-          schema:
-            $ref: '#/definitions/Dashboard'
-        400:
-          description: "internal server error"
-          schema:
-            $ref: '#/responses/401'
-
-
-definitions:
-  Dashboard:
-    type: object
-    required:
-      - patients_monthly
-      - patients_per_day
-      - cost_monthly
-      - cost_today
-      - fee
-    properties:
-      patients_per_day:
-        type: integer
-        format: int32
-      patients_monthly:
-        type: integer
-        format: int32
-      cost_today:
-        type: integer
-        format: int32
-      cost_monthly:
-        type: integer
-        format: int32
-      fee:
-        type: integer
-        format: int32
-
-  User:
-    type: object
-    properties:
-      name:
-        type: string
-      username:
-        type: string
-      password:
-        type: string
-      token:
-        type: string
-  PatientResponse:
-    type: object
-    required:
-      - data
-      - size
-    properties:
-      size:
-        type: integer
-        format: int32
-        description: Number of items in the response
-      data:
-        type: array
-        items:
-          $ref: '#/definitions/Patient'
-  Patient:
-    type: object
-    properties:
-      name:
-        type: string
-      ID:
-        type: string
-      dateTime:
-        type: string
-        format: date-time
-      fatherOrHusbandName:
-        type: string
-      age:
-        type: integer
-      weight:
-        type: integer
-      gender:
-        type: string
-      mobileNo:
-        type: string
-      address:
-        type: string
-      disease:
-        type: string
-      cnic:
-        type: string
-      medicine:
-        type: string
-  Medicine:
-    type: object
-    properties:
-      name:
-        type: string
-      description:
-        type: string
-  Disease:
-    type: object
-    properties:
-      name:
-        type: string
-      symptoms:
-        type: string
-  error:
-    type: object
-    required:
-      - code
-      - message
-    properties:
-      code:
-        type: string
-        example: error code
-      message:
-        type: string
-        example: error message
-responses:
-  400:
-    description: Bad Request
-    schema:
-      $ref: '#/definitions/error'
-  401:
-    description: Unauthorized
-    schema:
-      $ref: '#/definitions/error'
-  404:
-    description: Not Found
-    schema:
-      $ref: '#/definitions/error'
-  409:
-    description: Conflict
-    schema:
-      $ref: '#/definitions/error'
-  500:
-    description: Internal Server Error
-    schema:
-      $ref: '#/definitions/error'
-  422:
-    description: Invalid json
-    schema:
-      $ref: '#/definitions/error'
+    error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: error code
+        message:
+          type: string
+          example: error message
+  responses:
+    400:
+      description: Bad Request
+      schema:
+        $ref: '#/definitions/error'
+    401:
+      description: Unauthorized
+      schema:
+        $ref: '#/definitions/error'
+    404:
+      description: Not Found
+      schema:
+        $ref: '#/definitions/error'
+    409:
+      description: Conflict
+      schema:
+        $ref: '#/definitions/error'
+    500:
+      description: Internal Server Error
+      schema:
+        $ref: '#/definitions/error'
+    422:
+      description: Invalid json
+      schema:
+        $ref: '#/definitions/error'
 

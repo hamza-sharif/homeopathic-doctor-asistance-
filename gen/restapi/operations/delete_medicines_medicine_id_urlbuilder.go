@@ -9,15 +9,14 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+	"strings"
 
 	"github.com/go-openapi/swag"
 )
 
-// GetMedicinesURL generates an URL for the get medicines operation
-type GetMedicinesURL struct {
-	Limit  *int32
-	Name   *string
-	Offset *int32
+// DeleteMedicinesMedicineIDURL generates an URL for the delete medicines medicine ID operation
+type DeleteMedicinesMedicineIDURL struct {
+	MedicineID int32
 
 	_basePath string
 	// avoid unkeyed usage
@@ -27,7 +26,7 @@ type GetMedicinesURL struct {
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetMedicinesURL) WithBasePath(bp string) *GetMedicinesURL {
+func (o *DeleteMedicinesMedicineIDURL) WithBasePath(bp string) *DeleteMedicinesMedicineIDURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -35,15 +34,22 @@ func (o *GetMedicinesURL) WithBasePath(bp string) *GetMedicinesURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetMedicinesURL) SetBasePath(bp string) {
+func (o *DeleteMedicinesMedicineIDURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *GetMedicinesURL) Build() (*url.URL, error) {
+func (o *DeleteMedicinesMedicineIDURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/medicines"
+	var _path = "/medicines/{medicine_id}"
+
+	medicineID := swag.FormatInt32(o.MedicineID)
+	if medicineID != "" {
+		_path = strings.Replace(_path, "{medicine_id}", medicineID, -1)
+	} else {
+		return nil, errors.New("medicineId is required on DeleteMedicinesMedicineIDURL")
+	}
 
 	_basePath := o._basePath
 	if _basePath == "" {
@@ -51,39 +57,11 @@ func (o *GetMedicinesURL) Build() (*url.URL, error) {
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
 
-	qs := make(url.Values)
-
-	var limitQ string
-	if o.Limit != nil {
-		limitQ = swag.FormatInt32(*o.Limit)
-	}
-	if limitQ != "" {
-		qs.Set("limit", limitQ)
-	}
-
-	var nameQ string
-	if o.Name != nil {
-		nameQ = *o.Name
-	}
-	if nameQ != "" {
-		qs.Set("name", nameQ)
-	}
-
-	var offsetQ string
-	if o.Offset != nil {
-		offsetQ = swag.FormatInt32(*o.Offset)
-	}
-	if offsetQ != "" {
-		qs.Set("offset", offsetQ)
-	}
-
-	_result.RawQuery = qs.Encode()
-
 	return &_result, nil
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *GetMedicinesURL) Must(u *url.URL, err error) *url.URL {
+func (o *DeleteMedicinesMedicineIDURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -94,17 +72,17 @@ func (o *GetMedicinesURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *GetMedicinesURL) String() string {
+func (o *DeleteMedicinesMedicineIDURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *GetMedicinesURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *DeleteMedicinesMedicineIDURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on GetMedicinesURL")
+		return nil, errors.New("scheme is required for a full url on DeleteMedicinesMedicineIDURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on GetMedicinesURL")
+		return nil, errors.New("host is required for a full url on DeleteMedicinesMedicineIDURL")
 	}
 
 	base, err := o.Build()
@@ -118,6 +96,6 @@ func (o *GetMedicinesURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *GetMedicinesURL) StringFull(scheme, host string) string {
+func (o *DeleteMedicinesMedicineIDURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

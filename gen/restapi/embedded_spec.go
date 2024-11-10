@@ -27,7 +27,7 @@ func init() {
     "title": "Medical API",
     "version": "1.0.0"
   },
-  "host": "api.example.com",
+  "host": "localhost:8080",
   "basePath": "/v1",
   "paths": {
     "/dashboard": {
@@ -175,7 +175,6 @@ func init() {
           "200": {
             "description": "List of patients",
             "schema": {
-              "type": "object",
               "$ref": "#/definitions/User"
             }
           },
@@ -213,6 +212,20 @@ func init() {
             "type": "string",
             "description": "Filter by medicines name",
             "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "how many records we need to skip",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "Record in one query",
+            "name": "limit",
             "in": "query"
           }
         ],
@@ -260,6 +273,45 @@ func init() {
         "responses": {
           "201": {
             "description": "Medicine added successfully",
+            "schema": {
+              "format": "string"
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "$ref": "#/responses/400"
+            }
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "$ref": "#/responses/401"
+            }
+          }
+        }
+      }
+    },
+    "/medicines/{medicine_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete medicine",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "name": "medicine_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Medicine deleted successfully",
             "schema": {
               "format": "string"
             }
@@ -338,7 +390,6 @@ func init() {
           "200": {
             "description": "List of patients",
             "schema": {
-              "type": "object",
               "$ref": "#/definitions/PatientResponse"
             }
           },
@@ -571,6 +622,10 @@ func init() {
       "properties": {
         "description": {
           "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
         },
         "name": {
           "type": "string"
@@ -735,7 +790,7 @@ func init() {
     "title": "Medical API",
     "version": "1.0.0"
   },
-  "host": "api.example.com",
+  "host": "localhost:8080",
   "basePath": "/v1",
   "paths": {
     "/dashboard": {
@@ -895,7 +950,6 @@ func init() {
           "200": {
             "description": "List of patients",
             "schema": {
-              "type": "object",
               "$ref": "#/definitions/User"
             }
           },
@@ -942,6 +996,20 @@ func init() {
             "type": "string",
             "description": "Filter by medicines name",
             "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "how many records we need to skip",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "description": "Record in one query",
+            "name": "limit",
             "in": "query"
           }
         ],
@@ -995,6 +1063,51 @@ func init() {
         "responses": {
           "201": {
             "description": "Medicine added successfully",
+            "schema": {
+              "format": "string"
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "schema": {
+              "description": "Bad Request",
+              "schema": {
+                "$ref": "#/definitions/error"
+              }
+            }
+          },
+          "401": {
+            "description": "internal server error",
+            "schema": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/medicines/{medicine_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete medicine",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int32",
+            "name": "medicine_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Medicine deleted successfully",
             "schema": {
               "format": "string"
             }
@@ -1079,7 +1192,6 @@ func init() {
           "200": {
             "description": "List of patients",
             "schema": {
-              "type": "object",
               "$ref": "#/definitions/PatientResponse"
             }
           },
@@ -1339,6 +1451,10 @@ func init() {
       "properties": {
         "description": {
           "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
         },
         "name": {
           "type": "string"

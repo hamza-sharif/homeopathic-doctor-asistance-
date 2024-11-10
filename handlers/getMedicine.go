@@ -20,7 +20,19 @@ type getMedicine struct {
 func (c *getMedicine) Handle(params gen.GetMedicinesParams, principal interface{}) middleware.Responder {
 	log().Debugf("Request: get Medicines")
 
-	meds, err := c.rt.Svc.GetMedicine(swag.StringValue(params.Name))
+	var limit, offset int
+	if params.Limit != nil {
+		limit = int(*params.Limit)
+	}
+	if params.Offset != nil {
+		offset = int(*params.Offset)
+	}
+
+	if limit == 0 {
+		limit = 5000
+	}
+
+	meds, err := c.rt.Svc.GetMedicine(swag.StringValue(params.Name), limit, offset)
 	if err != nil {
 		log().Debugf("not able to get list of medicines: %v", err)
 		return gen.NewGetMedicinesBadRequest().WithPayload("not able to get medicines")

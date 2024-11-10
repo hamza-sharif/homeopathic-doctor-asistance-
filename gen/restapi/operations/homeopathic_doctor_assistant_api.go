@@ -42,6 +42,9 @@ func NewHomeopathicDoctorAssistantAPI(spec *loads.Document) *HomeopathicDoctorAs
 
 		JSONProducer: runtime.JSONProducer(),
 
+		DeleteMedicinesMedicineIDHandler: DeleteMedicinesMedicineIDHandlerFunc(func(params DeleteMedicinesMedicineIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation DeleteMedicinesMedicineID has not yet been implemented")
+		}),
 		DeletePatientsPatientIDHandler: DeletePatientsPatientIDHandlerFunc(func(params DeletePatientsPatientIDParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation DeletePatientsPatientID has not yet been implemented")
 		}),
@@ -128,6 +131,8 @@ type HomeopathicDoctorAssistantAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
+	// DeleteMedicinesMedicineIDHandler sets the operation handler for the delete medicines medicine ID operation
+	DeleteMedicinesMedicineIDHandler DeleteMedicinesMedicineIDHandler
 	// DeletePatientsPatientIDHandler sets the operation handler for the delete patients patient ID operation
 	DeletePatientsPatientIDHandler DeletePatientsPatientIDHandler
 	// GetDashboardHandler sets the operation handler for the get dashboard operation
@@ -233,6 +238,9 @@ func (o *HomeopathicDoctorAssistantAPI) Validate() error {
 		unregistered = append(unregistered, "AuthorizationAuth")
 	}
 
+	if o.DeleteMedicinesMedicineIDHandler == nil {
+		unregistered = append(unregistered, "DeleteMedicinesMedicineIDHandler")
+	}
 	if o.DeletePatientsPatientIDHandler == nil {
 		unregistered = append(unregistered, "DeletePatientsPatientIDHandler")
 	}
@@ -366,6 +374,10 @@ func (o *HomeopathicDoctorAssistantAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/medicines/{medicine_id}"] = NewDeleteMedicinesMedicineID(o.context, o.DeleteMedicinesMedicineIDHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}

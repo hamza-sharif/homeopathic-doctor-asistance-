@@ -99,25 +99,35 @@ func (cli *client) GetPrice() int {
 	return cli.Fee
 }
 
-func (cli *client) GetMedicineByName(filter string) ([]*models.Medicine, error) {
+func (cli *client) GetMedicineByName(filter string, limit, offset int) ([]*models.Medicine, error) {
 	var meds []*models.Medicine
 	filter = "%" + filter + "%"
-	result := cli.conn.Model(&models.Medicine{}).Where("name ILIKE ?", filter).Find(&meds)
+	result := cli.conn.Model(&models.Medicine{}).Where("name ILIKE ?", filter).Limit(limit).Offset(offset).Find(&meds)
 	if result.Error != nil {
 		return nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
 	}
+
 	return meds, nil
 }
 
-func (cli *client) GetAllMedicine() ([]*models.Medicine, error) {
+func (cli *client) GetAllMedicine(limit, offset int) ([]*models.Medicine, error) {
 	var meds []*models.Medicine
-	result := cli.conn.Model(&models.Medicine{}).Find(&meds)
+	result := cli.conn.Model(&models.Medicine{}).Limit(limit).Offset(offset).Find(&meds)
 	if result.Error != nil {
 		return nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
 	}
 	return meds, nil
+
 }
 
 func (cli *client) AddMedicine(medicine *models.Medicine) error {
 	return cli.conn.Create(&medicine).Error
+}
+
+func (cli *client) DeleteMedicine(medicineID int32) error {
+	md := &models.Medicine{}
+	md.ID = uint(medicineID)
+
+	result := cli.conn.Delete(md)
+	return result.Error
 }

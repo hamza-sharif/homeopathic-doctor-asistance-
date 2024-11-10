@@ -1,8 +1,9 @@
 package services
 
 import (
-	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 	"time"
+
+	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 )
 
 func (s *Service) AddPatients(patient *models.Patient) error {
@@ -21,6 +22,7 @@ func (s *Service) GetPatients(patient models.Patient, limit, offset int) ([]*mod
 	}
 	return patients, pCount, nil
 }
+
 func (s *Service) DeletePatient(patientID string) error {
 	return s.db.DeletePatient(patientID)
 }
@@ -32,15 +34,19 @@ func (s *Service) GetBill(startDate, endDate time.Time) (int, error) {
 	return s.db.GetBill(startDate, endDate)
 }
 
-func (s *Service) GetMedicine(name string) ([]*models.Medicine, error) {
+func (s *Service) GetMedicine(name string, limit, offset int) ([]*models.Medicine, error) {
 	if name == "" {
-		return s.db.GetAllMedicine()
+		return s.db.GetAllMedicine(limit, offset)
 	}
-	return s.db.GetMedicineByName(name)
+	return s.db.GetMedicineByName(name, limit, offset)
 }
 
 func (s *Service) AddMedicine(medicine *models.Medicine) error {
 	return s.db.AddMedicine(medicine)
+}
+
+func (s *Service) DeleteMedicine(patientID int32) error {
+	return s.db.DeleteMedicine(patientID)
 }
 
 func (s *Service) UpdatePrice(price int) error {

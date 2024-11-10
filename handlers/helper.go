@@ -59,6 +59,7 @@ func convertMedicine(patients []*models.Medicine) []*genModel.Medicine {
 		medList = append(medList, &genModel.Medicine{
 			Name:        meds.Name,
 			Description: meds.Description,
+			ID:          int32(meds.ID),
 		})
 	}
 

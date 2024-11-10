@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewGetMedicinesParams creates a new GetMedicinesParams object,
@@ -61,11 +62,27 @@ GetMedicinesParams contains all the parameters to send to the API endpoint
 */
 type GetMedicinesParams struct {
 
+	/* Limit.
+
+	   Record in one query
+
+	   Format: int32
+	*/
+	Limit *int32
+
 	/* Name.
 
 	   Filter by medicines name
 	*/
 	Name *string
+
+	/* Offset.
+
+	   how many records we need to skip
+
+	   Format: int32
+	*/
+	Offset *int32
 
 	timeout    time.Duration
 	Context    context.Context
@@ -120,6 +137,17 @@ func (o *GetMedicinesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithLimit adds the limit to the get medicines params
+func (o *GetMedicinesParams) WithLimit(limit *int32) *GetMedicinesParams {
+	o.SetLimit(limit)
+	return o
+}
+
+// SetLimit adds the limit to the get medicines params
+func (o *GetMedicinesParams) SetLimit(limit *int32) {
+	o.Limit = limit
+}
+
 // WithName adds the name to the get medicines params
 func (o *GetMedicinesParams) WithName(name *string) *GetMedicinesParams {
 	o.SetName(name)
@@ -131,6 +159,17 @@ func (o *GetMedicinesParams) SetName(name *string) {
 	o.Name = name
 }
 
+// WithOffset adds the offset to the get medicines params
+func (o *GetMedicinesParams) WithOffset(offset *int32) *GetMedicinesParams {
+	o.SetOffset(offset)
+	return o
+}
+
+// SetOffset adds the offset to the get medicines params
+func (o *GetMedicinesParams) SetOffset(offset *int32) {
+	o.Offset = offset
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *GetMedicinesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -138,6 +177,23 @@ func (o *GetMedicinesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
+
+	if o.Limit != nil {
+
+		// query param limit
+		var qrLimit int32
+
+		if o.Limit != nil {
+			qrLimit = *o.Limit
+		}
+		qLimit := swag.FormatInt32(qrLimit)
+		if qLimit != "" {
+
+			if err := r.SetQueryParam("limit", qLimit); err != nil {
+				return err
+			}
+		}
+	}
 
 	if o.Name != nil {
 
@@ -151,6 +207,23 @@ func (o *GetMedicinesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if qName != "" {
 
 			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Offset != nil {
+
+		// query param offset
+		var qrOffset int32
+
+		if o.Offset != nil {
+			qrOffset = *o.Offset
+		}
+		qOffset := swag.FormatInt32(qrOffset)
+		if qOffset != "" {
+
+			if err := r.SetQueryParam("offset", qOffset); err != nil {
 				return err
 			}
 		}

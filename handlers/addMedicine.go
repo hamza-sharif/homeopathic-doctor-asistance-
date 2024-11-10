@@ -7,7 +7,7 @@ import (
 	"github.com/hamza-sharif/homeopathic-doctor-assistant/models"
 )
 
-func NewAddMedicine(rt *runtime.Runtime) gen.PostMedicinesHandler {
+func NewPostMedicine(rt *runtime.Runtime) gen.PostMedicinesHandler {
 	return &addMedicine{
 		rt: rt,
 	}
