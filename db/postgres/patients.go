@@ -102,7 +102,7 @@ func (cli *client) GetPrice() int {
 func (cli *client) GetMedicine(filter string, limit, offset int) (int64, []*models.Medicine, error) {
 	var meds []*models.Medicine
 	var count int64
-	query := cli.conn.Model(&models.Medicine{}).Limit(limit).Offset(offset)
+	query := cli.conn.Model(&models.Medicine{})
 	if filter != "" {
 		filter = "%" + filter + "%"
 		query = query.Where("name ILIKE ?", filter)
@@ -114,7 +114,7 @@ func (cli *client) GetMedicine(filter string, limit, offset int) (int64, []*mode
 		return 0, nil, wraperrors.Wrap(resultCount.Error, config.ErrorMessage500)
 	}
 
-	result := query.Find(&meds)
+	result := query.Limit(limit).Offset(offset).Find(&meds)
 	if result.Error != nil {
 		return 0, nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
 	}
