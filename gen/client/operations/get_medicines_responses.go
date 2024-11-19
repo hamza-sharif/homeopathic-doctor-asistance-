@@ -58,7 +58,7 @@ GetMedicinesOK describes a response with status code 200, with default header va
 List of medicines
 */
 type GetMedicinesOK struct {
-	Payload []*models.Medicine
+	Payload *models.MedicineResponse
 }
 
 // IsSuccess returns true when this get medicines o k response has a 2xx status code
@@ -101,14 +101,16 @@ func (o *GetMedicinesOK) String() string {
 	return fmt.Sprintf("[GET /medicines][%d] getMedicinesOK %s", 200, payload)
 }
 
-func (o *GetMedicinesOK) GetPayload() []*models.Medicine {
+func (o *GetMedicinesOK) GetPayload() *models.MedicineResponse {
 	return o.Payload
 }
 
 func (o *GetMedicinesOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.MedicineResponse)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

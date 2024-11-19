@@ -263,9 +263,7 @@
           200:
             description: List of medicines
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/Medicine'
+              $ref: '#/definitions/MedicineResponse'
           400:
             description: "bad request"
             schema:
@@ -444,7 +442,7 @@
           format: date-time
         fatherOrHusbandName:
           type: string
-        age:
+        age: 
           type: integer
         weight:
           type: integer
@@ -470,6 +468,21 @@
         id:
           type: integer
           format: int32
+    MedicineResponse:
+      type: object
+      required:
+        - data
+        - size
+      properties:
+        size:
+          type: integer
+          format: int64
+          description: Number of items in the response
+        data:
+          type: array
+          items:
+            $ref: '#/definitions/Medicine'
+        
     Disease:
       type: object
       properties:

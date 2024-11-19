@@ -99,25 +99,27 @@ func (cli *client) GetPrice() int {
 	return cli.Fee
 }
 
-func (cli *client) GetMedicineByName(filter string, limit, offset int) ([]*models.Medicine, error) {
+func (cli *client) GetMedicine(filter string, limit, offset int) (int64, []*models.Medicine, error) {
 	var meds []*models.Medicine
-	filter = "%" + filter + "%"
-	result := cli.conn.Model(&models.Medicine{}).Where("name ILIKE ?", filter).Limit(limit).Offset(offset).Find(&meds)
-	if result.Error != nil {
-		return nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
+	var count int64
+	query := cli.conn.Model(&models.Medicine{}).Limit(limit).Offset(offset)
+	if filter != "" {
+		filter = "%" + filter + "%"
+		query = query.Where("name ILIKE ?", filter)
 	}
 
-	return meds, nil
-}
+	resultCount := query.Count(&count)
 
-func (cli *client) GetAllMedicine(limit, offset int) ([]*models.Medicine, error) {
-	var meds []*models.Medicine
-	result := cli.conn.Model(&models.Medicine{}).Limit(limit).Offset(offset).Find(&meds)
-	if result.Error != nil {
-		return nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
+	if resultCount.Error != nil {
+		return 0, nil, wraperrors.Wrap(resultCount.Error, config.ErrorMessage500)
 	}
-	return meds, nil
 
+	result := query.Find(&meds)
+	if result.Error != nil {
+		return 0, nil, wraperrors.Wrap(result.Error, config.ErrorMessage500)
+	}
+
+	return count, meds, nil
 }
 
 func (cli *client) AddMedicine(medicine *models.Medicine) error {

@@ -24,8 +24,7 @@ type Client interface {
 	SetPrice(price int) error
 	GetPrice() int
 
-	GetAllMedicine(limit, offset int) ([]*models.Medicine, error)
-	GetMedicineByName(filter string, limit, offset int) ([]*models.Medicine, error)
+	GetMedicine(filter string, limit, offset int) (int64, []*models.Medicine, error)
 	AddMedicine(*models.Medicine) error
 	DeleteMedicine(medicineID int32) error
 }

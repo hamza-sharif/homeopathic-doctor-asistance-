@@ -26,7 +26,7 @@ type GetMedicinesOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []*models.Medicine `json:"body,omitempty"`
+	Payload *models.MedicineResponse `json:"body,omitempty"`
 }
 
 // NewGetMedicinesOK creates GetMedicinesOK with default headers values
@@ -36,13 +36,13 @@ func NewGetMedicinesOK() *GetMedicinesOK {
 }
 
 // WithPayload adds the payload to the get medicines o k response
-func (o *GetMedicinesOK) WithPayload(payload []*models.Medicine) *GetMedicinesOK {
+func (o *GetMedicinesOK) WithPayload(payload *models.MedicineResponse) *GetMedicinesOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get medicines o k response
-func (o *GetMedicinesOK) SetPayload(payload []*models.Medicine) {
+func (o *GetMedicinesOK) SetPayload(payload *models.MedicineResponse) {
 	o.Payload = payload
 }
 
@@ -50,14 +50,11 @@ func (o *GetMedicinesOK) SetPayload(payload []*models.Medicine) {
 func (o *GetMedicinesOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if payload == nil {
-		// return empty array
-		payload = make([]*models.Medicine, 0, 50)
-	}
-
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

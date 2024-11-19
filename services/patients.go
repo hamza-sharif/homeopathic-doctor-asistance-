@@ -34,11 +34,8 @@ func (s *Service) GetBill(startDate, endDate time.Time) (int, error) {
 	return s.db.GetBill(startDate, endDate)
 }
 
-func (s *Service) GetMedicine(name string, limit, offset int) ([]*models.Medicine, error) {
-	if name == "" {
-		return s.db.GetAllMedicine(limit, offset)
-	}
-	return s.db.GetMedicineByName(name, limit, offset)
+func (s *Service) GetMedicine(name string, limit, offset int) (int64, []*models.Medicine, error) {
+	return s.db.GetMedicine(name, limit, offset)
 }
 
 func (s *Service) AddMedicine(medicine *models.Medicine) error {

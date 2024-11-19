@@ -233,10 +233,7 @@ func init() {
           "200": {
             "description": "List of medicines",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Medicine"
-              }
+              "$ref": "#/definitions/MedicineResponse"
             }
           },
           "400": {
@@ -629,6 +626,26 @@ func init() {
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "MedicineResponse": {
+      "type": "object",
+      "required": [
+        "data",
+        "size"
+      ],
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Medicine"
+          }
+        },
+        "size": {
+          "description": "Number of items in the response",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -1017,10 +1034,7 @@ func init() {
           "200": {
             "description": "List of medicines",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Medicine"
-              }
+              "$ref": "#/definitions/MedicineResponse"
             }
           },
           "400": {
@@ -1458,6 +1472,26 @@ func init() {
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "MedicineResponse": {
+      "type": "object",
+      "required": [
+        "data",
+        "size"
+      ],
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Medicine"
+          }
+        },
+        "size": {
+          "description": "Number of items in the response",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
